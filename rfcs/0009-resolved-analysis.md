@@ -71,7 +71,7 @@ map. A `ref` and an `id` are strings, described in section 6.
 | `spec_version` | string | the version of ASTRA the document is written at, such as `"0.1.0"` |
 | `analyses` | [`Analysis`] | the stack: the driving analysis first, then every analysis it declares, directly or not |
 | `results` | [`Result`] | the planned results, each after every result it reads |
-| `notes` | [`Diagnostic`] | what an author may want to tidy, none of which breaks a rule: an output with no planned result, say, or one a switch leaves unbuilt in a universe |
+| `notes` | [`Diagnostic`] | what an author may want to tidy, none of which breaks a rule a validator checks: an output with no planned result, say, or one a switch leaves unbuilt in a universe |
 
 `Analysis`, one analysis of the stack:
 
@@ -79,7 +79,7 @@ map. A `ref` and an `id` are strings, described in section 6.
 |---|---|---|
 | `key` | string | its canonical address (section 6): `""` for the driving analysis, else the declarations that reach it, such as `stage` or `stage.inner` |
 | `folder` | string | its folder, as a path from the driving analysis's folder: `.` for the driving analysis, `stage`, `../sibling`. For an analysis read at a commit, from the top of the repository it is read in |
-| `commit` | `Commit`? | there when the analysis is read at a commit |
+| `commit` | `Commit`? | there when the analysis is read at another commit than the driving analysis is |
 | `label`, `description` | string? | as its file writes them |
 | `tags` | [string] | as its file writes them |
 | `declares` | {id: key} | each of its declarations, and the `key` of the analysis it reaches |
@@ -114,9 +114,10 @@ What the driving analysis plans:
 | `Place` | `address`; `record_path`; `bytes_path`. Both paths are from the driving analysis's folder |
 
 A `Diagnostic` is what the validator already reports, with one more level: a
-`code`; a `level`, `error`, `warning` or `note`; a `message`; and a
-`location`, with `file`, a JSON `pointer` into it, and `line?`, `column?`,
-`key?`, `commit?` and `url?`.
+`code`; a `level`, `error`, `warning` or `note`; a `message`; a `location`,
+with `file`, a JSON `pointer` into it, and `line?`, `column?`, `key?`,
+`commit?` and `url?`; and `related`, a list of other locations. A note's code
+is its tool's own, as no rule stands behind it.
 
 #### 2. Outcomes, not instructions
 
@@ -247,10 +248,16 @@ the model as `Analysis.folder` and `Analysis.commit`.
 #### 7. One frame for paths
 
 Every path in the model is from the driving analysis's folder, the folder the
-tool was given: an analysis's `folder`, an input's `path`, a place's
-`record_path` and `bytes_path`, and the `file` of a diagnostic. A file read at
-a commit isn't in the working tree, so it is named in that commit's tree, from
-the top of its repository, and its analysis's `commit` says which.
+tool was given: an analysis's `folder`, an input's `path`, and a place's
+`record_path` and `bytes_path`. A file read at a commit isn't in the working
+tree, so it is named in that commit's tree, from the top of its repository,
+and its analysis's `commit` says which.
+
+A diagnostic is the one exception. Its `location.file` is a path from the top
+of the repository, as it is in the validator's report, where the conformance
+suite fixes it (`"file": "analysis/astra.yaml"` for an analysis in the folder
+`analysis`). A diagnostic is the same wherever it is reported, in a validation
+report, in `notes` or in a status.
 
 #### 8. The command
 
@@ -273,7 +280,10 @@ the working tree, so no rule says what path the command would name.
   string keys.
 - A field with no value is left out, never null, as in an `astra.yaml`. A
   list or a map is always there, and empty where it holds nothing.
-- A set is written as a sorted list.
+- A list that comes from a file keeps the file's order: what an analysis
+  declares, a decision's options, tags, and a result's `inputs`. `analyses`
+  holds the driving analysis first, then the others in the order of their
+  keys, and `results` holds each result after every result it reads.
 - Field names are in snake_case in every language, as in the files.
 
 #### 10. What stays outside
@@ -293,8 +303,8 @@ A checker gives one document for a resolved analysis:
 | Type | Fields |
 |---|---|
 | `CheckReport` | `analysis`: `ResolvedAnalysis`, the one it checked; `statuses`: {id: `Status`}, one for each planned result; `evidence`: [`EvidenceStatus`] |
-| `Status` | `state`, `unchanged`, `stale` or `missing`; `bytes?`, `present` or `absent`; `record?`, the result's record as the [record schema](../docs/specification.md#schema-files) has it; `why`: [`Diagnostic`]; `stale_inputs`: [entry] |
-| `EvidenceStatus` | `insight`: ref; `index`, from zero; `state`; `why`: [`Diagnostic`] |
+| `Status` | `state`, `unchanged`, `stale` or `missing`; `bytes?`, `present` or `absent`, left out for a result from a commit that no recipe reads; `record?`, the result's record as the [record schema](../docs/specification.md#schema-files) has it, there when the result isn't `missing`; `why`: [`Diagnostic`]; `stale_inputs`: [entry] |
+| `EvidenceStatus` | `insight`: ref; `index`, from zero; `state`, the worst of the results it cites, and `missing` where it cites none; `why`: [`Diagnostic`] |
 
 There is one status for each result. A result with two names has a record at
 each place, and its status is the worse of the two, with `why` saying which
@@ -302,17 +312,22 @@ place.
 
 A status keeps apart the two ways a result is stale:
 
-- `why` holds what is wrong with the result itself: it has no valid record,
-  or its output's declaration, an option it is made with or the content of an
-  input has changed since its record's commit.
-- `stale_inputs` names the entries of its output's `inputs` whose result is
-  stale or missing.
+- `why` holds a diagnostic for each
+  [check rule](../docs/specification.md#rules) the result itself breaks: it
+  has no valid record, its output's declaration, an option it is made with or
+  the content of an input has changed since its record's commit
+  (`STALE_RESULT`), or its bytes aren't at its default place
+  (`ABSENT_RESULT`, a warning, which leaves `state` as it is).
+- `stale_inputs` names the entries of its output's `inputs` that read a
+  result that isn't unchanged, or one made again since with other bytes than
+  the record gives for the entry. It is no diagnostic of its own: the reason
+  is the other result's.
 
-A result that is stale only through `stale_inputs` is unchanged again once
-those results are rebuilt with the hashes its record gives. Whether to wait
-for them and skip the rebuild is a runner's to decide, not the checker's. The
-split, with the hash of each input in the record, is what a runner needs to
-decide it.
+A result that is `stale` with no error in `why` is stale only through
+`stale_inputs`. It is unchanged again once those results are rebuilt with the
+hashes its record gives. Whether to wait for them and skip the rebuild is a
+runner's to decide, not the checker's. The split, with the hash of each input
+in the record, is what a runner needs to decide it.
 
 ## Examples
 
@@ -354,7 +369,8 @@ findings:
       - artifact: output2
 ```
 
-Its resolved analysis, written by hand for this RFC until a tool gives it:
+Its resolved analysis, as astra-tools gives it
+([astra-tools#138](https://github.com/astra-project/astra-tools/pull/138)):
 
 ```json
 {
@@ -367,32 +383,32 @@ Its resolved analysis, written by hand for this RFC until a tool gives it:
       "tags": [],
       "declares": {},
       "inputs": [
-        {"ref": "inputs.input1", "tags": [], "path": "data/input1.csv"}
+        {"ref": "inputs.input1", "path": "data/input1.csv", "tags": []}
       ],
       "decisions": [
         {
           "ref": "decisions.decision1",
-          "rationale": "Both are reasonable, and they may give different results.",
-          "tags": [],
           "options": [
             {"id": "a", "tags": [], "insights": []},
             {"id": "b", "tags": [], "insights": []}
-          ]
+          ],
+          "rationale": "Both are reasonable, and they may give different results.",
+          "tags": []
         }
       ],
       "outputs": [
         {
           "ref": "outputs.output1",
-          "tags": [],
           "type": "metric",
           "format": "json",
+          "tags": [],
           "decisions": ["decisions.decision1"]
         },
         {
           "ref": "outputs.output2",
-          "tags": [],
           "type": "table",
           "format": "csv",
+          "tags": [],
           "decisions": []
         }
       ],
@@ -402,20 +418,20 @@ Its resolved analysis, written by hand for this RFC until a tool gives it:
           "ref": "findings.insight1",
           "kind": "finding",
           "claim": "Options a and b of decision1 give different results.",
-          "tags": [],
-          "evidence": [{"cites": ["output2"]}]
+          "evidence": [{"cites": ["output2"]}],
+          "tags": []
         }
       ],
       "universes": [
         {
           "ref": "universes.u1",
-          "tags": [],
-          "selection": {"decisions.decision1": "a"}
+          "selection": {"decisions.decision1": "a"},
+          "tags": []
         },
         {
           "ref": "universes.u2",
-          "tags": [],
-          "selection": {"decisions.decision1": "b"}
+          "selection": {"decisions.decision1": "b"},
+          "tags": []
         }
       ]
     }
@@ -424,46 +440,46 @@ Its resolved analysis, written by hand for this RFC until a tool gives it:
     {
       "id": "output1#u1",
       "output": "outputs.output1",
-      "universe": "universes.u1",
-      "command": "python src/output1.py data/input1.csv a results/u1/output1.json",
-      "inputs": [{"entry": "input1", "input": "inputs.input1"}],
       "places": [
         {
           "address": "output1#u1",
           "record_path": ".astra/records/u1/output1.json",
           "bytes_path": "results/u1/output1.json"
         }
-      ]
+      ],
+      "universe": "universes.u1",
+      "inputs": [{"entry": "input1", "input": "inputs.input1"}],
+      "command": "python src/output1.py data/input1.csv a results/u1/output1.json"
     },
     {
       "id": "output1#u2",
       "output": "outputs.output1",
-      "universe": "universes.u2",
-      "command": "python src/output1.py data/input1.csv b results/u2/output1.json",
-      "inputs": [{"entry": "input1", "input": "inputs.input1"}],
       "places": [
         {
           "address": "output1#u2",
           "record_path": ".astra/records/u2/output1.json",
           "bytes_path": "results/u2/output1.json"
         }
-      ]
+      ],
+      "universe": "universes.u2",
+      "inputs": [{"entry": "input1", "input": "inputs.input1"}],
+      "command": "python src/output1.py data/input1.csv b results/u2/output1.json"
     },
     {
       "id": "output2",
       "output": "outputs.output2",
-      "command": "python src/output2.py results/u1/output1.json results/u2/output1.json results/output2.csv",
-      "inputs": [
-        {"entry": "output1#u1", "result": "output1#u1"},
-        {"entry": "output1#u2", "result": "output1#u2"}
-      ],
       "places": [
         {
           "address": "output2",
           "record_path": ".astra/records/output2.json",
           "bytes_path": "results/output2.csv"
         }
-      ]
+      ],
+      "inputs": [
+        {"entry": "output1#u1", "result": "output1#u1"},
+        {"entry": "output1#u2", "result": "output1#u2"}
+      ],
+      "command": "python src/output2.py results/u1/output1.json results/u2/output1.json results/output2.csv"
     }
   ],
   "notes": []
@@ -479,10 +495,10 @@ Its resolved analysis, written by hand for this RFC until a tool gives it:
 
 ### Example 2: a status
 
-`output1`'s command is then edited and committed. A check finds `output1#u1`
-stale in itself, and `output2` stale only through what it reads. Two of the
-report's statuses, again written by hand, with hashes and commit ids left
-as placeholders:
+Each result is built and recorded, and then `output1`'s command is edited and
+committed. A check finds `output1#u1` stale in itself, and `output2` stale only
+through what it reads. Two of the report's statuses, as astra-tools gives
+them:
 
 ```json
 {
@@ -490,25 +506,30 @@ as placeholders:
     "state": "stale",
     "bytes": "present",
     "record": {
-      "spec_version": "0.1.0",
       "address": "output1#u1",
-      "content_hash": "sha256:<hash>",
-      "size": 17,
+      "content_hash": "sha256:96d8835bfc4cf3988391ef18a14ce730ba377b392f6515bc9e1c705d52ff8389",
+      "size": 11,
       "generated_by": {
-        "commit": "<commit id>",
-        "inputs": [
-          {"entry": "input1", "content_hash": "sha256:<hash>", "size": 4}
-        ],
+        "commit": "b79a5f9e513c6fbb69c21a9c673671a901340e48",
         "environment": {"iri": "urn:example:environment1"},
-        "runner": {"id": "example-runner", "version": "1.0.0"}
-      }
+        "runner": {"id": "astra-tools-tests", "version": "1"},
+        "inputs": [
+          {
+            "entry": "input1",
+            "content_hash": "sha256:52186c933993da4082b3cdc7c40bb4bf735b391ff54a2ef78c037dda6c38a680",
+            "size": 4
+          }
+        ]
+      },
+      "spec_version": "0.1.0"
     },
     "why": [
       {
         "code": "STALE_RESULT",
         "level": "error",
-        "message": "its recipe's command isn't the one it had at <commit id>",
-        "location": {"file": ".astra/records/u1/output1.json", "pointer": ""}
+        "message": "its recipe's command isn't the one it had at b79a5f9e513c",
+        "location": {"file": ".astra/records/u1/output1.json", "pointer": ""},
+        "related": []
       }
     ],
     "stale_inputs": []
@@ -517,19 +538,27 @@ as placeholders:
     "state": "stale",
     "bytes": "present",
     "record": {
-      "spec_version": "0.1.0",
       "address": "output2",
-      "content_hash": "sha256:<hash>",
-      "size": 42,
+      "content_hash": "sha256:83e2db4bcc26f97050fea319d160fed0ea7c7decda281abc6670ec5c88390bd9",
+      "size": 8,
       "generated_by": {
-        "commit": "<commit id>",
-        "inputs": [
-          {"entry": "output1#u1", "content_hash": "sha256:<hash>", "size": 17},
-          {"entry": "output1#u2", "content_hash": "sha256:<hash>", "size": 17}
-        ],
+        "commit": "b79a5f9e513c6fbb69c21a9c673671a901340e48",
         "environment": {"iri": "urn:example:environment1"},
-        "runner": {"id": "example-runner", "version": "1.0.0"}
-      }
+        "runner": {"id": "astra-tools-tests", "version": "1"},
+        "inputs": [
+          {
+            "entry": "output1#u1",
+            "content_hash": "sha256:96d8835bfc4cf3988391ef18a14ce730ba377b392f6515bc9e1c705d52ff8389",
+            "size": 11
+          },
+          {
+            "entry": "output1#u2",
+            "content_hash": "sha256:00af96947fd2ad69df2e12a842cc4459a3d4664be37b27fc91fde8c4620fec32",
+            "size": 11
+          }
+        ]
+      },
+      "spec_version": "0.1.0"
     },
     "why": [],
     "stale_inputs": ["output1#u1", "output1#u2"]
@@ -543,13 +572,13 @@ leave it.
 
 ### Example 3: a runner
 
-A runner in Python, on astra-tools' three functions. It resolves, checks
-once, runs each command in its output's analysis's folder, and writes what
-its run made:
+A runner in Python, on astra-tools' functions. One check, where git is, gives
+it the resolved analysis and every status. It runs each command in its
+output's analysis's folder, and writes what its run made:
 
 ```python
-analysis = astra.resolve(root)        # a valid analysis, or the validator's report
-report = astra.check(root, analysis)  # once, where git is
+report = astra.check(root)            # a valid analysis, or the validator's report
+analysis = report.analysis
 folder_of = {o.ref: a.folder for a in analysis.analyses for o in a.outputs}
 
 for result in analysis.results:       # each after the results it reads
@@ -558,12 +587,13 @@ for result in analysis.results:       # each after the results it reads
 
 # For one result, once the results it reads are built: the runner's own rule.
 # `now` gives, by entry, the hash of each result it reads as it now is.
+broken = status.record is None or any(d.level == "error" for d in status.why)
 recorded = (
     {i.entry: i.content_hash for i in status.record.generated_by.inputs}
     if status.record
     else {}
 )
-if status.why or any(recorded.get(entry) != now[entry] for entry in now):
+if broken or any(recorded[entry] != now[entry] for entry in status.stale_inputs):
     run(result.command, cwd=root / folder_of[result.output])
     ...                               # hash what it made
     astra.write_records(root, result, content_hash, size, generated_by)
@@ -586,9 +616,8 @@ TypeScript types. `just check-generated` then covers the new files.
 resolved analysis, which every tool that resolves must give for it.
 
 *Tools:* astra-tools returns the model from `resolve` and the check report
-from `check`
-([astra-tools#138](https://github.com/astra-project/astra-tools/pull/138),
-being rebuilt on it). The TypeScript SDK's `resolveAnalysis` changes from its
+from `check`, and writes a result's records with `write_records`
+([astra-tools#138](https://github.com/astra-project/astra-tools/pull/138)). The TypeScript SDK's `resolveAnalysis` changes from its
 document of one universe to this model. A runner reads the results and the
 statuses
 ([lightcone-cli#273](https://github.com/LightconeResearch/lightcone-cli/pull/273)
@@ -617,7 +646,8 @@ Settled while drafting:
   11). A runner builds a result whole, so it has no use for half of one.
 - **Paths from the top of the repository, or from the driving analysis's
   folder?** From the folder (section 7). It is where a runner works and what a
-  reader sees, and the validator's diagnostics name files the same way.
+  reader sees. A diagnostic's file stays as the validator reports it, from the
+  top of the repository.
 - **Are refs and result ids part of ASTRA?** They are a convention of this
   model, built from the specification's addresses. No author writes one, and
   no rule reads one.
@@ -648,9 +678,8 @@ Open:
 - **Evidence has no id.** A page that links to one piece of evidence names it
   by its insight and its index, which moves when evidence is added before
   it.
-- **The order of lists.** For two tools to give the same document, every list
-  needs an order: the analyses after the driving one, results that don't read
-  one another, and which lists count as sets (section 9). The conformance
+- **The order of results.** For two tools to give the same document, results
+  that don't read one another need an order too (section 9). The conformance
   cases will need it said.
 
 ## References
