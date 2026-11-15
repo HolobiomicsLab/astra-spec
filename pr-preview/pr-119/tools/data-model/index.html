@@ -1,0 +1,3967 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="ASTRA — Agentic Schema for Transparent Research Analysis.">
+      
+      
+        <meta name="author" content="Lightcone Research">
+      
+      
+        <link rel="canonical" href="https://astra-spec.org/tools/data-model/">
+      
+      
+        <link rel="prev" href="../api/">
+      
+      
+        <link rel="next" href="../../community/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.svg">
+      <meta name="generator" content="zensical-0.0.40">
+    
+    
+      
+        <title>Data model - ASTRA</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.fba56155.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/modern/palette.dfe2e883.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/astra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  
+  <link rel="icon" href="../../assets/favicon.ico" sizes="48x48">
+  <link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+  <meta name="theme-color" content="#F8F7F3" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#221F20" media="(prefers-color-scheme: dark)">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="ASTRA">
+  <meta property="og:title" content="Data model - ASTRA">
+  <meta property="og:description" content="ASTRA — Agentic Schema for Transparent Research Analysis.">
+  <meta property="og:image" content="https://astra-spec.org/latest/assets/brand/astra-social-card-1280x640.png">
+  <meta property="og:image:width" content="1280">
+  <meta property="og:image:height" content="640">
+  <meta name="twitter:card" content="summary_large_image">
+
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-label="Navigation"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#data-model" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="ASTRA" class="md-header__button md-logo" aria-label="ASTRA" data-md-component="logo">
+      
+  <img src="../../assets/brand/astra-compact.svg" alt="ASTRA">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Navigation">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ASTRA
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Data model
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-moon" viewBox="0 0 24 24"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Search">
+  <button type="button" class="md-search__button">
+    Search
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+        <a href="https://github.com/astra-project/astra-spec" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    astra-project/astra-spec
+  </div>
+</a>
+      
+    </div>
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../.." class="md-tabs__link">
+          
+  
+  Documentation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../specification/" class="md-tabs__link">
+          
+  
+  Specification
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  Python & CLI
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../community/" class="md-tabs__link">
+          
+  
+  Community
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="ASTRA" class="md-nav__button md-logo" aria-label="ASTRA" data-md-component="logo">
+      
+  <img src="../../assets/brand/astra-compact.svg" alt="ASTRA">
+
+    </a>
+    ASTRA
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/astra-project/astra-spec" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    astra-project/astra-spec
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Documentation
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  Documentation
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Home
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Installation
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Getting started
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  About
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Specification
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  Specification
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../specification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Format reference
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../elements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Field reference
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Python & CLI
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  Python & CLI
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Overview
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  CLI reference
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Python API
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Data model
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Data model
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#conventions" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Conventions
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Conventions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#json-report-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        JSON report contract
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Overview
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#diagnostics" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Diagnostics
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Diagnostics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#diagnostic" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>Diagnostic</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#location" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>Location</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-validation-report" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        The validation report
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The validation report">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#validationreport" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>ValidationReport</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-resolved-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        The resolved analysis
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The resolved analysis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#references-ids-and-paths" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        References, ids and paths
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-analysis-and-its-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        The analysis and its results
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-an-analysis-declares" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        What an analysis declares
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#insights-and-evidence" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Insights and evidence
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resolvedanalysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>ResolvedAnalysis</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>Analysis</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#commit" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>Commit</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#input" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>Input</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>Decision</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>Option</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>Output</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>Resources</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#insight" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>Insight</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evidence" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>Evidence</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#textquoteselector" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>TextQuoteSelector</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fragmentselector" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>FragmentSelector</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#universe" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>Universe</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#result" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>Result</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#place" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>Place</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#source" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>Source</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Example
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-status-report" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        The status report
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The status report">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#statusreport" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>StatusReport</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#status" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>Status</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bytes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>Bytes</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evidencestatus" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>EvidenceStatus</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Example
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-provenance-record" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        The provenance record
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The provenance record">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#provenancerecord" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>ProvenanceRecord</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generation" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>Generation</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recordedinput" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>RecordedInput</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>Environment</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#runner" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>Runner</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Example
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#papers" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Papers
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Papers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paper" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>Paper</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quotestatus" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>QuoteStatus</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Community
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  Community
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Overview
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rfc-process/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  RFC process
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../governance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Governance
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#conventions" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Conventions
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Conventions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#json-report-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        JSON report contract
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Overview
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#diagnostics" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Diagnostics
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Diagnostics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#diagnostic" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>Diagnostic</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#location" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>Location</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-validation-report" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        The validation report
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The validation report">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#validationreport" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>ValidationReport</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-resolved-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        The resolved analysis
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The resolved analysis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#references-ids-and-paths" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        References, ids and paths
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-analysis-and-its-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        The analysis and its results
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-an-analysis-declares" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        What an analysis declares
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#insights-and-evidence" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Insights and evidence
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resolvedanalysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>ResolvedAnalysis</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>Analysis</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#commit" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>Commit</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#input" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>Input</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>Decision</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>Option</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>Output</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>Resources</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#insight" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>Insight</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evidence" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>Evidence</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#textquoteselector" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>TextQuoteSelector</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fragmentselector" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>FragmentSelector</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#universe" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>Universe</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#result" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>Result</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#place" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>Place</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#source" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>Source</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Example
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-status-report" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        The status report
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The status report">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#statusreport" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>StatusReport</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#status" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>Status</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bytes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>Bytes</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evidencestatus" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>EvidenceStatus</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Example
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-provenance-record" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        The provenance record
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The provenance record">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#provenancerecord" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>ProvenanceRecord</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generation" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>Generation</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recordedinput" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>RecordedInput</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>Environment</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#runner" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>Runner</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Example
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#papers" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Papers
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Papers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paper" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>Paper</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quotestatus" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>QuoteStatus</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+
+              
+              <article class="md-content__inner md-typeset">
+                
+  
+  
+    <a class="astra-project" href="https://github.com/astra-project/astra-tools/tree/v0.3.0rc2/docs">astra-tools <span>v0.3.0rc2</span>
+    </a>
+  
+  
+                  
+  
+  
+
+
+<h1 id="data-model">Data model<a class="headerlink" href="#data-model" title="Permanent link">&para;</a></h1>
+<p>The data model is what the functions of <a href="../api/"><code>astra.api</code></a> return, and what a runner hands
+back. It is defined in
+<a href="https://github.com/astra-project/astra-tools/tree/main/src/astra/model"><code>src/astra/model/</code></a>,
+a file for each thing a function returns, and those files hold nothing else.</p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Classes</th>
+<th>Where they come from</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>validation_report.py</code></td>
+<td><a href="#validationreport"><code>ValidationReport</code></a></td>
+<td><code>validate</code> returns it</td>
+</tr>
+<tr>
+<td><code>resolved_analysis.py</code></td>
+<td><a href="#resolvedanalysis"><code>ResolvedAnalysis</code></a> and the classes it is made of</td>
+<td><code>resolve</code> returns it</td>
+</tr>
+<tr>
+<td><code>status_report.py</code></td>
+<td><a href="#statusreport"><code>StatusReport</code></a>, <a href="#status"><code>Status</code></a>, <a href="#evidencestatus"><code>EvidenceStatus</code></a></td>
+<td><code>status</code> returns it</td>
+</tr>
+<tr>
+<td><code>provenance_record.py</code></td>
+<td><a href="#provenancerecord"><code>ProvenanceRecord</code></a>, <a href="#generation"><code>Generation</code></a> and its parts</td>
+<td>a runner gives <code>write_records</code> a <code>Generation</code>; a <code>Status</code> holds the record</td>
+</tr>
+<tr>
+<td><code>diagnostic.py</code></td>
+<td><a href="#diagnostic"><code>Diagnostic</code></a>, <a href="#location"><code>Location</code></a></td>
+<td>the reports hold them</td>
+</tr>
+<tr>
+<td><code>paper.py</code></td>
+<td><a href="#paper"><code>Paper</code></a>, <a href="#quotestatus"><code>QuoteStatus</code></a></td>
+<td>the paper functions return them</td>
+</tr>
+</tbody>
+</table>
+<p>Every class is imported from <code>astra.api</code>.</p>
+<h2 id="conventions">Conventions<a class="headerlink" href="#conventions" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Plain data.</strong> Every class is a frozen dataclass that holds what JSON holds: text, numbers,
+  true and false, lists and maps. In Python a list is a <code>tuple</code>, and a map a read-only
+  mapping.</li>
+<li><strong>A reference is an id, never an object.</strong> Where one element names another, it holds the
+  other's id as text, and a reader looks it up.</li>
+<li><strong>Each fact once.</strong> What a reader gets by following a reference isn't repeated.</li>
+<li><strong>One JSON form.</strong> Each class writes as a JSON object that holds every field under its name.
+  An optional field is left out where it has no value, and is never <code>null</code>. A list or a map is
+  always there, empty or not. <code>ValidationReport</code>, <code>ResolvedAnalysis</code> and <code>StatusReport</code> have a
+  <code>to_json()</code> method that gives it.</li>
+</ul>
+<p>In the tables below, <em>optional</em> marks a field that can have no value.</p>
+<h3 id="json-report-contract">JSON report contract<a class="headerlink" href="#json-report-contract" title="Permanent link">&para;</a></h3>
+<p>Each report carries a fixed <code>schema_version</code>: <code>astra-tools.validation-report.v1</code>,
+<code>astra-tools.resolved-analysis.v1</code> or <code>astra-tools.status-report.v1</code>. This identifies the JSON format,
+independently of the authored ASTRA <code>spec_version</code> and the astra-tools package version.
+The field is set by the report class and adds no constructor argument.</p>
+<p>The packaged <a href="https://github.com/astra-project/astra-tools/blob/main/src/astra/model/reports.schema.json">reports.schema.json</a>
+is a JSON Schema 2019-09 document. Its <code>$defs</code> contain the three report types and their nested
+types; the document itself accepts any of the three reports. Other languages can consume it
+without Python. It checks transport structure, not reference integrity or the rules applied
+by <code>validate</code>, <code>resolve</code> and <code>status</code>. In Python, read it with:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">importlib.resources</span><span class="w"> </span><span class="kn">import</span> <span class="n">files</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">schema_json</span> <span class="o">=</span> <span class="n">files</span><span class="p">(</span><span class="s2">&quot;astra.model&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;reports.schema.json&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Within a format version, producers may add optional fields; readers should ignore unknown
+fields. Removing or renaming a field, changing its type or meaning, adding a required field,
+or making an optional field required needs a new format version. Lists keep the ordering
+described below; JSON object member order is not part of the interchange contract. Optional
+fields remain omitted, never <code>null</code>.</p>
+<p>Generate the schema from the Python model with
+<code>uv run --frozen python scripts/generate-report-schema.py</code>; tests check it for drift.
+Small, reproducible <a href="https://github.com/astra-project/astra-tools/tree/main/tests/report-fixtures">report fixtures</a>
+provide expected JSON for independent implementations; they supplement the specification's
+validation conformance suite.</p>
+<p>The diagrams are UML class diagrams. A filled diamond is on a class that holds another; a
+hollow diamond is on a class that refers to another by its ref or id. The number beside a class
+says how many, and <code>[0..1]</code> after a field marks an optional one, <code>[*]</code> a list.</p>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>The three reports, and what they share. A status report holds none of the analysis: it names
+each result by its id, and <code>resolve</code> gives the result.</p>
+<pre class="mermaid"><code>classDiagram
+  direction LR
+  class ValidationReport
+  class ResolvedAnalysis
+  class StatusReport
+  class Analysis
+  class Result
+  class Status
+  class EvidenceStatus
+  class ProvenanceRecord
+  class Diagnostic
+  ValidationReport *-- "*" Diagnostic : diagnostics
+  ResolvedAnalysis *-- "1..*" Analysis : analyses
+  ResolvedAnalysis *-- "*" Result : results
+  ResolvedAnalysis *-- "*" Diagnostic : notes
+  StatusReport *-- "*" Status : statuses
+  StatusReport *-- "*" EvidenceStatus : evidence
+  StatusReport o-- "*" Result : statuses, by id
+  Status *-- "0..1" ProvenanceRecord : record
+  Status *-- "*" Diagnostic : why
+  EvidenceStatus *-- "*" Diagnostic : why</code></pre>
+<h2 id="diagnostics">Diagnostics<a class="headerlink" href="#diagnostics" title="Permanent link">&para;</a></h2>
+<p>A diagnostic is a rule broken, or a note, and where. Its code is a rule's in the
+specification's <a href="https://astra-spec.org/0.1/specification/#rules">table of rules</a>, or one of
+astra-tools' own.</p>
+<pre class="mermaid"><code>classDiagram
+  direction LR
+  class Diagnostic {
+    code : str
+    level : error, warning or note
+    message : str
+  }
+  class Location {
+    file : str
+    pointer : str
+    line : int [0..1]
+    column : int [0..1]
+    key : str [0..1]
+    commit : str [0..1]
+    url : str [0..1]
+  }
+  Diagnostic *-- "1" Location : location
+  Diagnostic *-- "*" Location : related</code></pre>
+<h3 id="diagnostic"><code>Diagnostic</code><a class="headerlink" href="#diagnostic" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>code</code></td>
+<td><code>str</code></td>
+<td>The rule's code, such as <code>UNRESOLVED_ADDRESS</code></td>
+</tr>
+<tr>
+<td><code>level</code></td>
+<td><code>str</code></td>
+<td><code>error</code> for a <code>MUST</code> broken, <code>warning</code> for a <code>SHOULD</code>, <code>note</code> for what breaks no rule</td>
+</tr>
+<tr>
+<td><code>message</code></td>
+<td><code>str</code></td>
+<td>What is wrong, and where it helps, what to do</td>
+</tr>
+<tr>
+<td><code>location</code></td>
+<td><a href="#location"><code>Location</code></a></td>
+<td>Where it is</td>
+</tr>
+<tr>
+<td><code>related</code></td>
+<td>list of <a href="#location"><code>Location</code></a></td>
+<td>Other places it concerns</td>
+</tr>
+</tbody>
+</table>
+<h3 id="location"><code>Location</code><a class="headerlink" href="#location" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>file</code></td>
+<td><code>str</code></td>
+<td>The document's path from the top of its repository</td>
+</tr>
+<tr>
+<td><code>pointer</code></td>
+<td><code>str</code></td>
+<td>A JSON Pointer into the document; <code>""</code> for the whole file</td>
+</tr>
+<tr>
+<td><code>line</code></td>
+<td><code>int</code>, optional</td>
+<td>The line, from 1</td>
+</tr>
+<tr>
+<td><code>column</code></td>
+<td><code>int</code>, optional</td>
+<td>The column, from 1</td>
+</tr>
+<tr>
+<td><code>key</code></td>
+<td><code>str</code>, optional</td>
+<td>The map key or field the diagnostic names</td>
+</tr>
+<tr>
+<td><code>commit</code></td>
+<td><code>str</code>, optional</td>
+<td>The commit the file was read at, where it wasn't read in the working tree</td>
+</tr>
+<tr>
+<td><code>url</code></td>
+<td><code>str</code>, optional</td>
+<td>The repository it came from, where that is another one</td>
+</tr>
+</tbody>
+</table>
+<h2 id="the-validation-report">The validation report<a class="headerlink" href="#the-validation-report" title="Permanent link">&para;</a></h2>
+<h3 id="validationreport"><code>ValidationReport</code><a class="headerlink" href="#validationreport" title="Permanent link">&para;</a></h3>
+<p>What validating an analysis found, over its whole stack.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>root</code></td>
+<td><code>str</code></td>
+<td>The analysis's <code>astra.yaml</code>, as a location names a file</td>
+</tr>
+<tr>
+<td><code>valid</code></td>
+<td><code>bool</code></td>
+<td>Whether no <code>MUST</code> is broken. Warnings don't make an analysis invalid</td>
+</tr>
+<tr>
+<td><code>diagnostics</code></td>
+<td>list of <a href="#diagnostic"><code>Diagnostic</code></a></td>
+<td>Each rule broken: the working tree's files first, then each commit's, each file in order of place</td>
+</tr>
+<tr>
+<td><code>unchecked</code></td>
+<td>list of <code>str</code></td>
+<td>The validator's codes this astra-tools doesn't check yet</td>
+</tr>
+<tr>
+<td><code>schema_version</code></td>
+<td><code>str</code></td>
+<td>Always <code>astra-tools.validation-report.v1</code>; the JSON report format</td>
+</tr>
+</tbody>
+</table>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span><span class="nt">&quot;root&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;astra.yaml&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;valid&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;diagnostics&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w"> </span><span class="nt">&quot;unchecked&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w"> </span><span class="nt">&quot;schema_version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;astra-tools.validation-report.v1&quot;</span><span class="p">}</span>
+</span></code></pre></div>
+<h2 id="the-resolved-analysis">The resolved analysis<a class="headerlink" href="#the-resolved-analysis" title="Permanent link">&para;</a></h2>
+<p>A resolved analysis is an analysis with every rule of the specification already applied. Two
+rules decide what is in it.</p>
+<p>It holds <strong>what the rules give, not what they start from</strong>. Where an <code>astra.yaml</code> writes
+something only for a rule to act on, the model holds the outcome: a universe's effective
+selection and no <code>derived_from</code>, what each entry of an output's <code>inputs</code> reads and no switch,
+a command as it runs and no template. What a file writes for people to read stays as written:
+labels, descriptions, rationales, claims, quotes.</p>
+<p>It holds <strong>each fact once</strong>. A result carries its places, what it reads and its command. It
+carries neither the options it is made with (its output's <code>decisions</code>, looked up in its
+universe's <code>selection</code>) nor the folder its recipe runs in (its output's analysis's <code>folder</code>).</p>
+<h3 id="references-ids-and-paths">References, ids and paths<a class="headerlink" href="#references-ids-and-paths" title="Permanent link">&para;</a></h3>
+<ul>
+<li>A <strong>ref</strong> names an element among all the analyses of the stack: its analysis's key, the
+  collection the file writes it in, and its id, joined by dots. <code>outputs.fit</code> is an output of
+  the driving analysis, and <code>stage.decisions.method</code> a decision of the analysis <code>stage</code>.</li>
+<li>An analysis's <strong>key</strong> is its canonical address: the shortest chain of declarations that
+  reaches it from the driving analysis, the first in alphabetical order among equals, and <code>""</code>
+  for the driving analysis itself.</li>
+<li>A result's <strong>id</strong> is its address, as its record gives it (<code>fit#baseline</code>), after the key of
+  the analysis it belongs to and a colon where that isn't the driving analysis
+  (<code>stage:fit#v1</code>).</li>
+<li>Every <strong>path</strong> is a path from the driving analysis's folder, with <code>/</code> between folders and <code>.</code>
+  for that folder itself. A file of an analysis read at a commit is in that commit's tree, from
+  the top of the repository it is read in. A diagnostic's location isn't such a path: it names
+  its file from the top of the repository.</li>
+</ul>
+<h3 id="the-analysis-and-its-results">The analysis and its results<a class="headerlink" href="#the-analysis-and-its-results" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>classDiagram
+  direction LR
+  class ResolvedAnalysis {
+    spec_version : str
+    head : str [0..1]
+  }
+  class Analysis {
+    key : str
+    folder : str
+  }
+  class Result {
+    id : str
+    command : str [0..1]
+  }
+  class Commit {
+    id : str
+    repository : str [0..1]
+  }
+  class Place {
+    address : str
+    record_path : str
+    file_path : str
+  }
+  class Source {
+    entry : str
+  }
+  class Output
+  class Universe
+  class Input
+  class Diagnostic
+  ResolvedAnalysis *-- "1..*" Analysis : analyses
+  ResolvedAnalysis *-- "*" Result : results
+  ResolvedAnalysis *-- "*" Diagnostic : notes
+  Result *-- "1..*" Place : places
+  Result *-- "*" Source : inputs
+  Result *-- "0..1" Commit : commit
+  Result o-- "1" Output : output
+  Result o-- "0..1" Universe : universe
+  Source o-- Input : input
+  Source o-- Result : result</code></pre>
+<p>A source has an <code>input</code> or a <code>result</code>, never both.</p>
+<h3 id="what-an-analysis-declares">What an analysis declares<a class="headerlink" href="#what-an-analysis-declares" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>classDiagram
+  direction LR
+  class Analysis {
+    key : str
+    folder : str
+    label : str [0..1]
+    description : str [0..1]
+    tags : str [*]
+    declares : map of id to key
+  }
+  class Commit {
+    id : str
+    repository : str [0..1]
+  }
+  class Input {
+    ref : str
+    path : str
+  }
+  class Decision {
+    ref : str
+    rationale : str [0..1]
+  }
+  class Option {
+    id : str
+    excluded : str [0..1]
+  }
+  class Output {
+    ref : str
+    type : str
+    format : str
+  }
+  class Resources {
+    cpus : float [0..1]
+    memory : str [0..1]
+    time_limit : str [0..1]
+    disk : str [0..1]
+    gpus : int [0..1]
+  }
+  class Universe {
+    ref : str
+    selection : map of decision to option
+  }
+  Analysis *-- "0..1" Commit : commit
+  Analysis *-- "*" Input : inputs
+  Analysis *-- "*" Decision : decisions
+  Analysis *-- "*" Output : outputs
+  Analysis *-- "*" Universe : universes
+  Analysis o-- "*" Analysis : declares
+  Decision *-- "1..*" Option : options
+  Output *-- "0..1" Resources : resources
+  Output o-- "*" Decision : decisions
+  Universe o-- "*" Decision : selection
+  Universe o-- "*" Option : selection</code></pre>
+<p><code>Input</code>, <code>Decision</code>, <code>Option</code>, <code>Output</code> and <code>Universe</code> also have a <code>label</code>, a <code>description</code> (a
+<code>rationale</code>, for a decision) and <code>tags</code>, left out of the diagram.</p>
+<h3 id="insights-and-evidence">Insights and evidence<a class="headerlink" href="#insights-and-evidence" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>classDiagram
+  direction LR
+  class Analysis
+  class Insight {
+    ref : str
+    kind : prior_insight or finding
+    claim : str
+    scope : str [0..1]
+  }
+  class Evidence {
+    doi : str [0..1]
+    version : int [0..1]
+  }
+  class TextQuoteSelector {
+    exact : str
+    prefix : str [0..1]
+    suffix : str [0..1]
+  }
+  class FragmentSelector {
+    value : str
+    conforms_to : str [0..1]
+  }
+  class Option
+  class Result
+  Analysis *-- "*" Insight : prior_insights
+  Analysis *-- "*" Insight : findings
+  Insight *-- "1..*" Evidence : evidence
+  Evidence *-- "0..1" TextQuoteSelector : quote
+  Evidence *-- "0..1" FragmentSelector : location
+  Evidence o-- "*" Result : cites
+  Option o-- "*" Insight : insights</code></pre>
+<h3 id="resolvedanalysis"><code>ResolvedAnalysis</code><a class="headerlink" href="#resolvedanalysis" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>spec_version</code></td>
+<td><code>str</code></td>
+<td>The driving analysis's <code>spec_version</code></td>
+</tr>
+<tr>
+<td><code>head</code></td>
+<td><code>str</code>, optional</td>
+<td>The commit the repository is on, as HEAD names it; none where it has no commit yet</td>
+</tr>
+<tr>
+<td><code>analyses</code></td>
+<td>list of <a href="#analysis"><code>Analysis</code></a></td>
+<td>The driving analysis, then each it declares, directly or not, by key</td>
+</tr>
+<tr>
+<td><code>results</code></td>
+<td>list of <a href="#result"><code>Result</code></a></td>
+<td>The results, each after every result it reads</td>
+</tr>
+<tr>
+<td><code>notes</code></td>
+<td>list of <a href="#diagnostic"><code>Diagnostic</code></a></td>
+<td>What an author may want to tidy, which breaks no rule</td>
+</tr>
+<tr>
+<td><code>schema_version</code></td>
+<td><code>str</code></td>
+<td>Always <code>astra-tools.resolved-analysis.v1</code>; the JSON report format</td>
+</tr>
+</tbody>
+</table>
+<p>The notes are <code>FALLBACK_PIN</code>, <code>UNPLANNED_OUTPUT</code> and <code>NOT_BUILT</code>, at the level <code>note</code>, and the
+runner rule <code>CODE_OUTSIDE_ANALYSIS</code>, a warning.</p>
+<p><code>head</code> names the commit, not the files: the analysis is read in the working tree, so where a
+file is edited and not committed, two readings at the same <code>head</code> can differ. A
+<a href="#statusreport"><code>StatusReport</code></a> has the same field, so a reader that asked for both can tell
+that nothing was committed between the two.</p>
+<h3 id="analysis"><code>Analysis</code><a class="headerlink" href="#analysis" title="Permanent link">&para;</a></h3>
+<p>One analysis of the stack, with what it declares.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>key</code></td>
+<td><code>str</code></td>
+<td>Its canonical address; <code>""</code> for the driving analysis</td>
+</tr>
+<tr>
+<td><code>folder</code></td>
+<td><code>str</code></td>
+<td>Its folder; <code>.</code> for the driving analysis</td>
+</tr>
+<tr>
+<td><code>commit</code></td>
+<td><a href="#commit"><code>Commit</code></a>, optional</td>
+<td>The commit it is read at, where it isn't read as the driving analysis is</td>
+</tr>
+<tr>
+<td><code>label</code></td>
+<td><code>str</code>, optional</td>
+<td></td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td><code>str</code>, optional</td>
+<td></td>
+</tr>
+<tr>
+<td><code>tags</code></td>
+<td>list of <code>str</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>declares</code></td>
+<td>map of <code>str</code> to <code>str</code></td>
+<td>Each declaration's id, and the key of the analysis it reaches</td>
+</tr>
+<tr>
+<td><code>inputs</code></td>
+<td>list of <a href="#input"><code>Input</code></a></td>
+<td></td>
+</tr>
+<tr>
+<td><code>decisions</code></td>
+<td>list of <a href="#decision"><code>Decision</code></a></td>
+<td></td>
+</tr>
+<tr>
+<td><code>outputs</code></td>
+<td>list of <a href="#output"><code>Output</code></a></td>
+<td></td>
+</tr>
+<tr>
+<td><code>prior_insights</code></td>
+<td>list of <a href="#insight"><code>Insight</code></a></td>
+<td></td>
+</tr>
+<tr>
+<td><code>findings</code></td>
+<td>list of <a href="#insight"><code>Insight</code></a></td>
+<td></td>
+</tr>
+<tr>
+<td><code>universes</code></td>
+<td>list of <a href="#universe"><code>Universe</code></a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="commit"><code>Commit</code><a class="headerlink" href="#commit" title="Permanent link">&para;</a></h3>
+<p>The commit an analysis is read at.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td><code>str</code></td>
+<td>The commit's full id</td>
+</tr>
+<tr>
+<td><code>repository</code></td>
+<td><code>str</code>, optional</td>
+<td>The URL of another repository; none for the one that holds the driving analysis</td>
+</tr>
+</tbody>
+</table>
+<h3 id="input"><code>Input</code><a class="headerlink" href="#input" title="Permanent link">&para;</a></h3>
+<p>A file an analysis reads.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ref</code></td>
+<td><code>str</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>path</code></td>
+<td><code>str</code></td>
+<td>The file's path</td>
+</tr>
+<tr>
+<td><code>label</code></td>
+<td><code>str</code>, optional</td>
+<td></td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td><code>str</code>, optional</td>
+<td></td>
+</tr>
+<tr>
+<td><code>tags</code></td>
+<td>list of <code>str</code></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="decision"><code>Decision</code><a class="headerlink" href="#decision" title="Permanent link">&para;</a></h3>
+<p>A choice an analysis makes, between its options.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ref</code></td>
+<td><code>str</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>options</code></td>
+<td>list of <a href="#option"><code>Option</code></a></td>
+<td></td>
+</tr>
+<tr>
+<td><code>label</code></td>
+<td><code>str</code>, optional</td>
+<td></td>
+</tr>
+<tr>
+<td><code>rationale</code></td>
+<td><code>str</code>, optional</td>
+<td></td>
+</tr>
+<tr>
+<td><code>tags</code></td>
+<td>list of <code>str</code></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="option"><code>Option</code><a class="headerlink" href="#option" title="Permanent link">&para;</a></h3>
+<p>One of a decision's options.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td><code>str</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>label</code></td>
+<td><code>str</code>, optional</td>
+<td></td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td><code>str</code>, optional</td>
+<td></td>
+</tr>
+<tr>
+<td><code>tags</code></td>
+<td>list of <code>str</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>excluded</code></td>
+<td><code>str</code>, optional</td>
+<td>Why it is excluded: such an option is never selected</td>
+</tr>
+<tr>
+<td><code>insights</code></td>
+<td>list of <code>str</code></td>
+<td>The prior insights that support it, by ref</td>
+</tr>
+</tbody>
+</table>
+<h3 id="output"><code>Output</code><a class="headerlink" href="#output" title="Permanent link">&para;</a></h3>
+<p>What an analysis declares it makes. A switch isn't one: where a file writes a switch, each
+result that reads it names what it reads there, in its <code>inputs</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ref</code></td>
+<td><code>str</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>type</code></td>
+<td><code>str</code></td>
+<td><code>metric</code>, <code>figure</code>, <code>table</code>, <code>data</code> or <code>report</code></td>
+</tr>
+<tr>
+<td><code>format</code></td>
+<td><code>str</code></td>
+<td>The file format, such as <code>json</code></td>
+</tr>
+<tr>
+<td><code>label</code></td>
+<td><code>str</code>, optional</td>
+<td></td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td><code>str</code>, optional</td>
+<td></td>
+</tr>
+<tr>
+<td><code>tags</code></td>
+<td>list of <code>str</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>resources</code></td>
+<td><a href="#resources"><code>Resources</code></a>, optional</td>
+<td>What its recipe asks for</td>
+</tr>
+<tr>
+<td><code>decisions</code></td>
+<td>list of <code>str</code></td>
+<td>The decisions it is made with, by ref</td>
+</tr>
+</tbody>
+</table>
+<h3 id="resources"><code>Resources</code><a class="headerlink" href="#resources" title="Permanent link">&para;</a></h3>
+<p>What a recipe asks for.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cpus</code></td>
+<td><code>float</code>, optional</td>
+<td></td>
+</tr>
+<tr>
+<td><code>memory</code></td>
+<td><code>str</code>, optional</td>
+<td></td>
+</tr>
+<tr>
+<td><code>time_limit</code></td>
+<td><code>str</code>, optional</td>
+<td></td>
+</tr>
+<tr>
+<td><code>disk</code></td>
+<td><code>str</code>, optional</td>
+<td></td>
+</tr>
+<tr>
+<td><code>gpus</code></td>
+<td><code>int</code>, optional</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="insight"><code>Insight</code><a class="headerlink" href="#insight" title="Permanent link">&para;</a></h3>
+<p>A claim backed by evidence: what an analysis builds on, or what it concludes.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ref</code></td>
+<td><code>str</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>kind</code></td>
+<td><code>str</code></td>
+<td><code>prior_insight</code> or <code>finding</code></td>
+</tr>
+<tr>
+<td><code>claim</code></td>
+<td><code>str</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>evidence</code></td>
+<td>list of <a href="#evidence"><code>Evidence</code></a></td>
+<td></td>
+</tr>
+<tr>
+<td><code>label</code></td>
+<td><code>str</code>, optional</td>
+<td></td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td><code>str</code>, optional</td>
+<td></td>
+</tr>
+<tr>
+<td><code>scope</code></td>
+<td><code>str</code>, optional</td>
+<td></td>
+</tr>
+<tr>
+<td><code>tags</code></td>
+<td>list of <code>str</code></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="evidence"><code>Evidence</code><a class="headerlink" href="#evidence" title="Permanent link">&para;</a></h3>
+<p>What a claim rests on: a work, by its <code>doi</code>, or the results of an output, in <code>cites</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>doi</code></td>
+<td><code>str</code>, optional</td>
+<td>The work's DOI</td>
+</tr>
+<tr>
+<td><code>version</code></td>
+<td><code>int</code>, optional</td>
+<td>The work's version</td>
+</tr>
+<tr>
+<td><code>cites</code></td>
+<td>list of <code>str</code>, optional</td>
+<td>For evidence that cites an output, the id of each result it cites; empty where the output has no result</td>
+</tr>
+<tr>
+<td><code>quote</code></td>
+<td><a href="#textquoteselector"><code>TextQuoteSelector</code></a>, optional</td>
+<td></td>
+</tr>
+<tr>
+<td><code>location</code></td>
+<td><a href="#fragmentselector"><code>FragmentSelector</code></a>, optional</td>
+<td></td>
+</tr>
+<tr>
+<td><code>artifact</code></td>
+<td><code>str</code>, optional</td>
+<td>The artifact address as authored, scoped to the analysis containing the insight</td>
+</tr>
+</tbody>
+</table>
+<p><code>artifact</code> preserves a switch address and any <code>#universe</code> pin. It remains present when <code>cites</code>
+is empty, so a reader can identify what the author cited even where no result is planned. It
+is an authored address, not a canonical ref. Evidence citing a DOI has no <code>artifact</code>.</p>
+<h3 id="textquoteselector"><code>TextQuoteSelector</code><a class="headerlink" href="#textquoteselector" title="Permanent link">&para;</a></h3>
+<p>A passage quoted exactly.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>exact</code></td>
+<td><code>str</code></td>
+<td>The passage</td>
+</tr>
+<tr>
+<td><code>prefix</code></td>
+<td><code>str</code>, optional</td>
+<td>The text just before it</td>
+</tr>
+<tr>
+<td><code>suffix</code></td>
+<td><code>str</code>, optional</td>
+<td>The text just after it</td>
+</tr>
+</tbody>
+</table>
+<h3 id="fragmentselector"><code>FragmentSelector</code><a class="headerlink" href="#fragmentselector" title="Permanent link">&para;</a></h3>
+<p>A place in a work or an output, as a fragment identifier.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>value</code></td>
+<td><code>str</code></td>
+<td>The fragment identifier, such as <code>page=6</code></td>
+</tr>
+<tr>
+<td><code>conforms_to</code></td>
+<td><code>str</code>, optional</td>
+<td>The syntax it follows, as an IRI</td>
+</tr>
+</tbody>
+</table>
+<h3 id="universe"><code>Universe</code><a class="headerlink" href="#universe" title="Permanent link">&para;</a></h3>
+<p>A universe of an analysis, with the option it selects for each decision it uses.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ref</code></td>
+<td><code>str</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>selection</code></td>
+<td>map of <code>str</code> to <code>str</code></td>
+<td>A decision's ref, and the id of the option selected: exactly the decisions the universe uses</td>
+</tr>
+<tr>
+<td><code>label</code></td>
+<td><code>str</code>, optional</td>
+<td></td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td><code>str</code>, optional</td>
+<td></td>
+</tr>
+<tr>
+<td><code>tags</code></td>
+<td>list of <code>str</code></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="result"><code>Result</code><a class="headerlink" href="#result" title="Permanent link">&para;</a></h3>
+<p>A result: one output, in one universe or once.</p>
+<p>The results are those of the outputs the driving analysis builds, each in every universe that
+builds it, and the results those read, in whatever analysis they belong to. The specification
+says the analysis <em>plans</em> these. An output with no result, such as one of a declared analysis
+that nothing reads, is named in the notes.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td><code>str</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>output</code></td>
+<td><code>str</code></td>
+<td>Its output, by ref</td>
+</tr>
+<tr>
+<td><code>places</code></td>
+<td>list of <a href="#place"><code>Place</code></a></td>
+<td>Where it is kept: one place, unless its analysis is driven through two chains of declarations</td>
+</tr>
+<tr>
+<td><code>universe</code></td>
+<td><code>str</code>, optional</td>
+<td>Its universe, by ref; none for an output built once</td>
+</tr>
+<tr>
+<td><code>inputs</code></td>
+<td>list of <a href="#source"><code>Source</code></a></td>
+<td>One for each entry of its output's <code>inputs</code>, in order</td>
+</tr>
+<tr>
+<td><code>command</code></td>
+<td><code>str</code>, optional</td>
+<td>Its recipe's command as it runs, in the folder of its output's analysis, with each path relative to that folder</td>
+</tr>
+<tr>
+<td><code>commit</code></td>
+<td><a href="#commit"><code>Commit</code></a>, optional</td>
+<td>The commit whose tree its places are in, where the analysis it belongs to is read at one; none for a result whose places are in the working tree</td>
+</tr>
+</tbody>
+</table>
+<p>A result has no <code>command</code> where it isn't built from the working tree alone: a result of an
+analysis read at a commit, one whose recipe runs on a commit's files, or one that reads a file
+at a commit.</p>
+<p>A result with a <code>commit</code> is a result from a commit: it is never built, its record is the one
+at that commit, and <code>write_records</code> refuses it.</p>
+<h3 id="place"><code>Place</code><a class="headerlink" href="#place" title="Permanent link">&para;</a></h3>
+<p>Where one name of a result is kept.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>address</code></td>
+<td><code>str</code></td>
+<td>The name, then <code>#</code> and the universe's id for a result built in one</td>
+</tr>
+<tr>
+<td><code>record_path</code></td>
+<td><code>str</code></td>
+<td>Where its record goes</td>
+</tr>
+<tr>
+<td><code>file_path</code></td>
+<td><code>str</code></td>
+<td>The result's file, where its bytes go. A stand-in may be there in their place: its <a href="#status"><code>Status</code></a> says</td>
+</tr>
+</tbody>
+</table>
+<h3 id="source"><code>Source</code><a class="headerlink" href="#source" title="Permanent link">&para;</a></h3>
+<p>What one entry of an output's <code>inputs</code> reads for a result: an input, or another result, through
+any pin and the case each switch on the way takes. It has <code>input</code> or <code>result</code>, never both.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>entry</code></td>
+<td><code>str</code></td>
+<td>The entry, as the output's <code>inputs</code> writes it</td>
+</tr>
+<tr>
+<td><code>input</code></td>
+<td><code>str</code>, optional</td>
+<td>The input it reads, by ref</td>
+</tr>
+<tr>
+<td><code>result</code></td>
+<td><code>str</code>, optional</td>
+<td>The result it reads, by id</td>
+</tr>
+</tbody>
+</table>
+<h3 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h3>
+<p>For this analysis:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">spec_version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;0.1.0&quot;</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Example</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nt">inputs</span><span class="p">:</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="nt">catalog</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="nv">data/catalog.csv</span><span class="p p-Indicator">}</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nt">decisions</span><span class="p">:</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="nt">method</span><span class="p">:</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span><span class="nt">options</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">ols</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{},</span><span class="nt"> robust</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}}</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nt">outputs</span><span class="p">:</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span><span class="nt">fit</span><span class="p">:</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">metric</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">json</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">    </span><span class="nt">inputs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">catalog</span><span class="p p-Indicator">]</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">    </span><span class="nt">decisions</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">method</span><span class="p p-Indicator">]</span>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">    </span><span class="nt">recipe</span><span class="p">:</span>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">      </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python fit.py {inputs.catalog} {decisions.method} {output}</span>
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="nt">universes</span><span class="p">:</span>
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">  </span><span class="nt">baseline</span><span class="p">:</span>
+</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">    </span><span class="nt">decisions</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="nv">ols</span><span class="p p-Indicator">}</span>
+</span></code></pre></div>
+<p><code>resolve</code> gives:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">&quot;spec_version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.1.0&quot;</span><span class="p">,</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="nt">&quot;head&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;b0e28a260c752e8060197b5f788086c53233cb4f&quot;</span><span class="p">,</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="nt">&quot;analyses&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="p">{</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">      </span><span class="nt">&quot;key&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">      </span><span class="nt">&quot;folder&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;.&quot;</span><span class="p">,</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">      </span><span class="nt">&quot;label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Example&quot;</span><span class="p">,</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">      </span><span class="nt">&quot;tags&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">      </span><span class="nt">&quot;declares&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">      </span><span class="nt">&quot;inputs&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">&quot;ref&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;inputs.catalog&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;data/catalog.csv&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;tags&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[]}],</span>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">      </span><span class="nt">&quot;decisions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">        </span><span class="p">{</span>
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">          </span><span class="nt">&quot;ref&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;decisions.method&quot;</span><span class="p">,</span>
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">          </span><span class="nt">&quot;options&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">            </span><span class="p">{</span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ols&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;tags&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w"> </span><span class="nt">&quot;insights&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[]},</span>
+</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">            </span><span class="p">{</span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;robust&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;tags&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w"> </span><span class="nt">&quot;insights&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[]}</span>
+</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">          </span><span class="p">],</span>
+</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="w">          </span><span class="nt">&quot;tags&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span>
+</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="w">        </span><span class="p">}</span>
+</span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="w">      </span><span class="p">],</span>
+</span><span id="__span-3-22"><a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="w">      </span><span class="nt">&quot;outputs&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-3-23"><a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="w">        </span><span class="p">{</span>
+</span><span id="__span-3-24"><a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="w">          </span><span class="nt">&quot;ref&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;outputs.fit&quot;</span><span class="p">,</span>
+</span><span id="__span-3-25"><a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a><span class="w">          </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;metric&quot;</span><span class="p">,</span>
+</span><span id="__span-3-26"><a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a><span class="w">          </span><span class="nt">&quot;format&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;json&quot;</span><span class="p">,</span>
+</span><span id="__span-3-27"><a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a><span class="w">          </span><span class="nt">&quot;tags&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
+</span><span id="__span-3-28"><a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a><span class="w">          </span><span class="nt">&quot;decisions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;decisions.method&quot;</span><span class="p">]</span>
+</span><span id="__span-3-29"><a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a><span class="w">        </span><span class="p">}</span>
+</span><span id="__span-3-30"><a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a><span class="w">      </span><span class="p">],</span>
+</span><span id="__span-3-31"><a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a><span class="w">      </span><span class="nt">&quot;prior_insights&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
+</span><span id="__span-3-32"><a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a><span class="w">      </span><span class="nt">&quot;findings&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
+</span><span id="__span-3-33"><a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a><span class="w">      </span><span class="nt">&quot;universes&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-3-34"><a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a><span class="w">        </span><span class="p">{</span><span class="nt">&quot;ref&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;universes.baseline&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;selection&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;decisions.method&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ols&quot;</span><span class="p">},</span><span class="w"> </span><span class="nt">&quot;tags&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[]}</span>
+</span><span id="__span-3-35"><a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a><span class="w">      </span><span class="p">]</span>
+</span><span id="__span-3-36"><a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-3-37"><a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a><span class="w">  </span><span class="p">],</span>
+</span><span id="__span-3-38"><a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a><span class="w">  </span><span class="nt">&quot;results&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-3-39"><a id="__codelineno-3-39" name="__codelineno-3-39" href="#__codelineno-3-39"></a><span class="w">    </span><span class="p">{</span>
+</span><span id="__span-3-40"><a id="__codelineno-3-40" name="__codelineno-3-40" href="#__codelineno-3-40"></a><span class="w">      </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;fit#baseline&quot;</span><span class="p">,</span>
+</span><span id="__span-3-41"><a id="__codelineno-3-41" name="__codelineno-3-41" href="#__codelineno-3-41"></a><span class="w">      </span><span class="nt">&quot;output&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;outputs.fit&quot;</span><span class="p">,</span>
+</span><span id="__span-3-42"><a id="__codelineno-3-42" name="__codelineno-3-42" href="#__codelineno-3-42"></a><span class="w">      </span><span class="nt">&quot;places&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-3-43"><a id="__codelineno-3-43" name="__codelineno-3-43" href="#__codelineno-3-43"></a><span class="w">        </span><span class="p">{</span>
+</span><span id="__span-3-44"><a id="__codelineno-3-44" name="__codelineno-3-44" href="#__codelineno-3-44"></a><span class="w">          </span><span class="nt">&quot;address&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;fit#baseline&quot;</span><span class="p">,</span>
+</span><span id="__span-3-45"><a id="__codelineno-3-45" name="__codelineno-3-45" href="#__codelineno-3-45"></a><span class="w">          </span><span class="nt">&quot;record_path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;.astra/records/baseline/fit.json&quot;</span><span class="p">,</span>
+</span><span id="__span-3-46"><a id="__codelineno-3-46" name="__codelineno-3-46" href="#__codelineno-3-46"></a><span class="w">          </span><span class="nt">&quot;file_path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;results/baseline/fit.json&quot;</span>
+</span><span id="__span-3-47"><a id="__codelineno-3-47" name="__codelineno-3-47" href="#__codelineno-3-47"></a><span class="w">        </span><span class="p">}</span>
+</span><span id="__span-3-48"><a id="__codelineno-3-48" name="__codelineno-3-48" href="#__codelineno-3-48"></a><span class="w">      </span><span class="p">],</span>
+</span><span id="__span-3-49"><a id="__codelineno-3-49" name="__codelineno-3-49" href="#__codelineno-3-49"></a><span class="w">      </span><span class="nt">&quot;universe&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;universes.baseline&quot;</span><span class="p">,</span>
+</span><span id="__span-3-50"><a id="__codelineno-3-50" name="__codelineno-3-50" href="#__codelineno-3-50"></a><span class="w">      </span><span class="nt">&quot;inputs&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">&quot;entry&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;catalog&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;input&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;inputs.catalog&quot;</span><span class="p">}],</span>
+</span><span id="__span-3-51"><a id="__codelineno-3-51" name="__codelineno-3-51" href="#__codelineno-3-51"></a><span class="w">      </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;python fit.py data/catalog.csv ols results/baseline/fit.json&quot;</span>
+</span><span id="__span-3-52"><a id="__codelineno-3-52" name="__codelineno-3-52" href="#__codelineno-3-52"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-3-53"><a id="__codelineno-3-53" name="__codelineno-3-53" href="#__codelineno-3-53"></a><span class="w">  </span><span class="p">],</span>
+</span><span id="__span-3-54"><a id="__codelineno-3-54" name="__codelineno-3-54" href="#__codelineno-3-54"></a><span class="w">  </span><span class="nt">&quot;notes&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
+</span><span id="__span-3-55"><a id="__codelineno-3-55" name="__codelineno-3-55" href="#__codelineno-3-55"></a><span class="w">  </span><span class="nt">&quot;schema_version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;astra-tools.resolved-analysis.v1&quot;</span>
+</span><span id="__span-3-56"><a id="__codelineno-3-56" name="__codelineno-3-56" href="#__codelineno-3-56"></a><span class="p">}</span>
+</span></code></pre></div>
+<h2 id="the-status-report">The status report<a class="headerlink" href="#the-status-report" title="Permanent link">&para;</a></h2>
+<p>A status report says how the results of an analysis stand: one status for each result of the
+resolved analysis, with the records and bytes that are in the working tree. It holds none of
+the analysis itself. Each status is under its result's id, and <code>resolve</code> gives the result.</p>
+<p>A result is <code>unchanged</code> where it has a record at each of its places and nothing it is made from
+has changed since the commit the record names; <code>stale</code> where something has; and <code>missing</code> where
+a place has no record that is the result's own.</p>
+<p>Separately, the report says where the <a href="#bytes">bytes</a> of each result and of each input are:
+<code>present</code> where reading the file gives its content, and <code>absent</code> otherwise. A result's state
+doesn't depend on its bytes, so a clone that hasn't fetched what a large-file tool keeps reads
+as up to date, with those bytes <code>absent</code>.</p>
+<pre class="mermaid"><code>classDiagram
+  direction LR
+  class StatusReport {
+    head : str [0..1]
+  }
+  class Status {
+    state : unchanged, stale or missing
+    stale_inputs : entry [*]
+  }
+  class Bytes {
+    state : present or absent
+    kept_by : str [0..1]
+  }
+  class EvidenceStatus {
+    insight : ref
+    index : int
+    state : unchanged, stale or missing
+  }
+  class ProvenanceRecord
+  class Result
+  class Input
+  class Diagnostic
+  class Insight
+  StatusReport *-- "*" Status : statuses, by result id
+  StatusReport *-- "*" EvidenceStatus : evidence
+  StatusReport *-- "*" Bytes : inputs, by input ref
+  StatusReport o-- "*" Result : statuses, by id
+  StatusReport o-- "*" Input : inputs, by ref
+  Status *-- "0..1" Bytes : bytes
+  Status *-- "0..1" ProvenanceRecord : record
+  Status *-- "*" Diagnostic : why
+  EvidenceStatus *-- "*" Diagnostic : why
+  EvidenceStatus o-- "1" Insight : insight</code></pre>
+<h3 id="statusreport"><code>StatusReport</code><a class="headerlink" href="#statusreport" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>head</code></td>
+<td><code>str</code>, optional</td>
+<td>The commit the repository was on when it was read, as <a href="#resolvedanalysis"><code>ResolvedAnalysis</code></a> gives it</td>
+</tr>
+<tr>
+<td><code>statuses</code></td>
+<td>map of <code>str</code> to <a href="#status"><code>Status</code></a></td>
+<td>Each result's status, by the result's id, in the results' order</td>
+</tr>
+<tr>
+<td><code>evidence</code></td>
+<td>list of <a href="#evidencestatus"><code>EvidenceStatus</code></a></td>
+<td>The status of each evidence that cites an output</td>
+</tr>
+<tr>
+<td><code>inputs</code></td>
+<td>map of <code>str</code> to <a href="#bytes"><code>Bytes</code></a></td>
+<td>Where each input's content is, by the input's ref</td>
+</tr>
+<tr>
+<td><code>schema_version</code></td>
+<td><code>str</code></td>
+<td>Always <code>astra-tools.status-report.v1</code>; the JSON report format</td>
+</tr>
+</tbody>
+</table>
+<h3 id="status"><code>Status</code><a class="headerlink" href="#status" title="Permanent link">&para;</a></h3>
+<p>A result's status: the worst of its places'.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>state</code></td>
+<td><code>str</code></td>
+<td><code>unchanged</code>, <code>stale</code> or <code>missing</code></td>
+</tr>
+<tr>
+<td><code>bytes</code></td>
+<td><a href="#bytes"><code>Bytes</code></a>, optional</td>
+<td>Where its bytes are; none for a result of an analysis read at a commit that no recipe reads</td>
+</tr>
+<tr>
+<td><code>record</code></td>
+<td><a href="#provenancerecord"><code>ProvenanceRecord</code></a>, optional</td>
+<td>Its record, where every place holds one that is the result's: the first place's</td>
+</tr>
+<tr>
+<td><code>why</code></td>
+<td>list of <a href="#diagnostic"><code>Diagnostic</code></a></td>
+<td>Each rule the result itself breaks</td>
+</tr>
+<tr>
+<td><code>stale_inputs</code></td>
+<td>list of <code>str</code></td>
+<td>Each entry of its output's <code>inputs</code> that reads a result that isn't unchanged, or one made again since with other bytes than the record gives</td>
+</tr>
+</tbody>
+</table>
+<p>A result that is <code>stale</code> with no error in <code>why</code> is stale only through what it reads. It is
+unchanged again once each of those is built with the bytes its record gives for the entry,
+which a runner that builds them can tell without a second check.</p>
+<h3 id="bytes"><code>Bytes</code><a class="headerlink" href="#bytes" title="Permanent link">&para;</a></h3>
+<p>Whether the content of a file the analysis names is in this clone: an input's, or a result's.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>state</code></td>
+<td><code>str</code></td>
+<td><code>present</code> where reading the file's path gives the content; <code>absent</code> otherwise. For a result, the content is the one its record gives</td>
+</tr>
+<tr>
+<td><code>kept_by</code></td>
+<td><code>str</code>, optional</td>
+<td>The tool whose stand-in is at the path: <code>git-annex</code>, <code>Git LFS</code> or <code>DVC</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>absent</code> with a <code>kept_by</code> means the content needs fetching, with that tool. astra-tools never
+fetches: when and how is a runner's to decide.</p>
+<p>A <strong>stand-in</strong> is what a large-file tool keeps in a file's place. astra-tools reads three:</p>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Its stand-in</th>
+<th>The content is here when</th>
+<th>Compared without the content</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>git-annex, locked file</td>
+<td>A link at the path, into an <code>annex/objects</code> folder</td>
+<td>The link leads to a file</td>
+<td>Yes, for a key of a SHA-256 backend, which is the default</td>
+</tr>
+<tr>
+<td>git-annex, unlocked file</td>
+<td>A pointer file at the path, only while the content isn't fetched</td>
+<td>The path holds the content</td>
+<td>Yes, the same</td>
+</tr>
+<tr>
+<td>Git LFS</td>
+<td>A pointer file at the path, only while the content isn't fetched</td>
+<td>The path holds the content</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>DVC</td>
+<td>A <code>.dvc</code> file beside the path</td>
+<td>A file is at the path, or a link from DVC's cache</td>
+<td>No: it gives an MD5, and a record a SHA-256</td>
+</tr>
+</tbody>
+</table>
+<p>So with git-annex and Git LFS, an analysis whose inputs and results aren't fetched validates,
+and its results read <code>unchanged</code>. With DVC, results that aren't fetched read <code>unchanged</code> too,
+but <strong>an input kept by DVC must be pulled</strong> for the results made from it to be compared: until
+then they read <code>stale</code>. The same holds for a git-annex key of a backend other than SHA-256.</p>
+<p>astra-tools follows a link only for a stand-in, as the operating system follows it:</p>
+<ul>
+<li>a git-annex link, to the file it leads to, where that file really is in an <code>annex/objects</code>
+  folder. So a submodule or a linked worktree works, whose object store is outside its tree,
+  and a link merely dressed as git-annex's leads nowhere;</li>
+<li>what is at the path beside a DVC file, wherever it leads, as DVC's cache can be anywhere.</li>
+</ul>
+<p>A link that is no stand-in's is never followed. This favours convenience: a repository can
+make <code>astra status</code> say whether a file is at a path of your machine, and whether it has a hash
+the repository gives, by a link beside a <code>.dvc</code> file. It never shows a file's content. That
+matters only where you run <code>astra</code> on a repository you don't trust and show its output.</p>
+<p><code>kept_by</code> names the stand-in that is on disk. A file whose content a tool has put in place of
+its pointer, as git-annex does for an unlocked file and Git LFS always, reads as a plain file.</p>
+<p><code>ABSENT_RESULT</code>, a warning, is for bytes that are neither at a result's file nor stood in for
+there: no file, other bytes, or a stand-in for other bytes. A stand-in for the recorded bytes
+breaks no rule.</p>
+<h3 id="evidencestatus"><code>EvidenceStatus</code><a class="headerlink" href="#evidencestatus" title="Permanent link">&para;</a></h3>
+<p>An item of evidence that cites an output, and the status it gets: the worst of the results it
+cites, and <code>missing</code> where it cites none.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>insight</code></td>
+<td><code>str</code></td>
+<td>The insight it backs, by ref</td>
+</tr>
+<tr>
+<td><code>index</code></td>
+<td><code>int</code></td>
+<td>Which item of the insight's <code>evidence</code>, from zero</td>
+</tr>
+<tr>
+<td><code>state</code></td>
+<td><code>str</code></td>
+<td><code>unchanged</code>, <code>stale</code> or <code>missing</code></td>
+</tr>
+<tr>
+<td><code>why</code></td>
+<td>list of <a href="#diagnostic"><code>Diagnostic</code></a></td>
+<td><code>STALE_EVIDENCE</code>, where it isn't unchanged</td>
+</tr>
+</tbody>
+</table>
+<h3 id="example_1">Example<a class="headerlink" href="#example_1" title="Permanent link">&para;</a></h3>
+<p>For the analysis above, before anything is built, <code>status</code> gives:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">{</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">&quot;head&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;b0e28a260c752e8060197b5f788086c53233cb4f&quot;</span><span class="p">,</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="nt">&quot;statuses&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span><span class="nt">&quot;fit#baseline&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">      </span><span class="nt">&quot;state&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;missing&quot;</span><span class="p">,</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">      </span><span class="nt">&quot;bytes&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;state&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;absent&quot;</span><span class="p">},</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">      </span><span class="nt">&quot;why&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">        </span><span class="p">{</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">          </span><span class="nt">&quot;code&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;MISSING_RECORD&quot;</span><span class="p">,</span>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">          </span><span class="nt">&quot;level&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;error&quot;</span><span class="p">,</span>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">          </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;no record is at .astra/records/baseline/fit.json: build `fit#baseline`, and record it there&quot;</span><span class="p">,</span>
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">          </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;file&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;.astra/records/baseline/fit.json&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;pointer&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">},</span>
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">          </span><span class="nt">&quot;related&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span>
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">        </span><span class="p">}</span>
+</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">      </span><span class="p">],</span>
+</span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">      </span><span class="nt">&quot;stale_inputs&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span>
+</span><span id="__span-4-17"><a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-4-18"><a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">  </span><span class="p">},</span>
+</span><span id="__span-4-19"><a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">  </span><span class="nt">&quot;evidence&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
+</span><span id="__span-4-20"><a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="w">  </span><span class="nt">&quot;inputs&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;inputs.catalog&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;state&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;present&quot;</span><span class="p">}},</span>
+</span><span id="__span-4-21"><a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="w">  </span><span class="nt">&quot;schema_version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;astra-tools.status-report.v1&quot;</span>
+</span><span id="__span-4-22"><a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="p">}</span>
+</span></code></pre></div>
+<h2 id="the-provenance-record">The provenance record<a class="headerlink" href="#the-provenance-record" title="Permanent link">&para;</a></h2>
+<p>A record is a runner's account of how it made a result, kept at the result's place. What it
+says is the runner's to find out, and true of its run. The classes have the fields of the
+specification's <a href="https://astra-spec.org/0.1/specification/">record schema</a>.</p>
+<pre class="mermaid"><code>classDiagram
+  direction LR
+  class ProvenanceRecord {
+    address : str
+    content_hash : str
+    size : int
+    spec_version : str
+  }
+  class Generation {
+    commit : str
+    started : str [0..1]
+    finished : str [0..1]
+  }
+  class RecordedInput {
+    entry : str
+    content_hash : str
+    size : int
+  }
+  class Environment {
+    iri : str
+  }
+  class Runner {
+    id : str
+    version : str
+  }
+  ProvenanceRecord *-- "1" Generation : generated_by
+  Generation *-- "1" Environment : environment
+  Generation *-- "1" Runner : runner
+  Generation *-- "*" RecordedInput : inputs</code></pre>
+<h3 id="provenancerecord"><code>ProvenanceRecord</code><a class="headerlink" href="#provenancerecord" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>address</code></td>
+<td><code>str</code></td>
+<td>The result's address at this place</td>
+</tr>
+<tr>
+<td><code>content_hash</code></td>
+<td><code>str</code></td>
+<td>The hash of the result's bytes, as <code>sha256:&lt;hex&gt;</code></td>
+</tr>
+<tr>
+<td><code>size</code></td>
+<td><code>int</code></td>
+<td>Their size, in bytes</td>
+</tr>
+<tr>
+<td><code>generated_by</code></td>
+<td><a href="#generation"><code>Generation</code></a></td>
+<td>The run that made it</td>
+</tr>
+<tr>
+<td><code>spec_version</code></td>
+<td><code>str</code></td>
+<td>The version of the specification the record is written for</td>
+</tr>
+</tbody>
+</table>
+<h3 id="generation"><code>Generation</code><a class="headerlink" href="#generation" title="Permanent link">&para;</a></h3>
+<p>A run of an output's recipe.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>commit</code></td>
+<td><code>str</code></td>
+<td>The commit it ran from</td>
+</tr>
+<tr>
+<td><code>environment</code></td>
+<td><a href="#environment"><code>Environment</code></a></td>
+<td>The environment it ran in</td>
+</tr>
+<tr>
+<td><code>runner</code></td>
+<td><a href="#runner"><code>Runner</code></a></td>
+<td>The runner that ran it</td>
+</tr>
+<tr>
+<td><code>inputs</code></td>
+<td>list of <a href="#recordedinput"><code>RecordedInput</code></a></td>
+<td>What it read: one for each entry the output's <code>inputs</code> lists</td>
+</tr>
+<tr>
+<td><code>started</code></td>
+<td><code>str</code>, optional</td>
+<td>When it started, in UTC to the millisecond: <code>2026-10-26T14:00:00.000Z</code></td>
+</tr>
+<tr>
+<td><code>finished</code></td>
+<td><code>str</code>, optional</td>
+<td>When it finished</td>
+</tr>
+</tbody>
+</table>
+<p>The times are text, as the record writes them.</p>
+<h3 id="recordedinput"><code>RecordedInput</code><a class="headerlink" href="#recordedinput" title="Permanent link">&para;</a></h3>
+<p>What a recipe read through one entry of its output's <code>inputs</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>entry</code></td>
+<td><code>str</code></td>
+<td>The entry, exactly as written</td>
+</tr>
+<tr>
+<td><code>content_hash</code></td>
+<td><code>str</code></td>
+<td>The hash of what was read</td>
+</tr>
+<tr>
+<td><code>size</code></td>
+<td><code>int</code></td>
+<td>Its size, in bytes</td>
+</tr>
+</tbody>
+</table>
+<h3 id="environment"><code>Environment</code><a class="headerlink" href="#environment" title="Permanent link">&para;</a></h3>
+<p>The environment a recipe ran in.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>iri</code></td>
+<td><code>str</code></td>
+<td>An IRI its runner can recreate the environment from</td>
+</tr>
+</tbody>
+</table>
+<h3 id="runner"><code>Runner</code><a class="headerlink" href="#runner" title="Permanent link">&para;</a></h3>
+<p>The runner that ran a recipe.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td><code>str</code></td>
+<td>The runner's name</td>
+</tr>
+<tr>
+<td><code>version</code></td>
+<td><code>str</code></td>
+<td>Its version</td>
+</tr>
+</tbody>
+</table>
+<h3 id="example_2">Example<a class="headerlink" href="#example_2" title="Permanent link">&para;</a></h3>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">{</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="nt">&quot;address&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;fit#baseline&quot;</span><span class="p">,</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="nt">&quot;content_hash&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sha256:2f52064dbe4ae7fa6932e26efc33bdf8c4e38b9fb958d8e34a08d51e72d0de5a&quot;</span><span class="p">,</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="nt">&quot;generated_by&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">    </span><span class="nt">&quot;commit&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;b0e28a260c752e8060197b5f788086c53233cb4f&quot;</span><span class="p">,</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">    </span><span class="nt">&quot;environment&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;iri&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;urn:example:python-3.13&quot;</span><span class="p">},</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">    </span><span class="nt">&quot;finished&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-11-15T10:04:22.950Z&quot;</span><span class="p">,</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">    </span><span class="nt">&quot;inputs&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">      </span><span class="p">{</span>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">        </span><span class="nt">&quot;content_hash&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sha256:9c6536d38fa37da58fac066342747e6d20fdace12ab5b287cf04506f2afe95b0&quot;</span><span class="p">,</span>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">        </span><span class="nt">&quot;entry&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;catalog&quot;</span><span class="p">,</span>
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">        </span><span class="nt">&quot;size&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span>
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">      </span><span class="p">}</span>
+</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">    </span><span class="p">],</span>
+</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">    </span><span class="nt">&quot;runner&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;example-runner&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.1.0&quot;</span><span class="p">},</span>
+</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">    </span><span class="nt">&quot;started&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-11-15T10:04:22.931Z&quot;</span>
+</span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="w">  </span><span class="p">},</span>
+</span><span id="__span-5-18"><a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w">  </span><span class="nt">&quot;size&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">28</span><span class="p">,</span>
+</span><span id="__span-5-19"><a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w">  </span><span class="nt">&quot;spec_version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.1.0&quot;</span>
+</span><span id="__span-5-20"><a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="p">}</span>
+</span></code></pre></div>
+<h2 id="papers">Papers<a class="headerlink" href="#papers" title="Permanent link">&para;</a></h2>
+<p>A paper is a work that evidence cites by its DOI, kept as a PDF in the paper cache.</p>
+<pre class="mermaid"><code>classDiagram
+  direction LR
+  class Paper {
+    doi : str
+    version : int [0..1]
+    pdf_path : str
+    content_hash : str
+    retrieved : str
+    title : str [0..1]
+    authors : str [*]
+    source_url : str [0..1]
+  }
+  class QuoteStatus {
+    state : found, elsewhere, not_found or no_paper
+    page : int [0..1]
+  }</code></pre>
+<h3 id="paper"><code>Paper</code><a class="headerlink" href="#paper" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>doi</code></td>
+<td><code>str</code></td>
+<td>Its DOI, as it was added</td>
+</tr>
+<tr>
+<td><code>pdf_path</code></td>
+<td><code>str</code></td>
+<td>Its PDF, as an absolute path</td>
+</tr>
+<tr>
+<td><code>content_hash</code></td>
+<td><code>str</code></td>
+<td>The hash of the PDF's bytes, as <code>sha256:&lt;hex&gt;</code></td>
+</tr>
+<tr>
+<td><code>retrieved</code></td>
+<td><code>str</code></td>
+<td>When it was put in the cache, in UTC</td>
+</tr>
+<tr>
+<td><code>version</code></td>
+<td><code>int</code>, optional</td>
+<td>The version of an arXiv paper</td>
+</tr>
+<tr>
+<td><code>title</code></td>
+<td><code>str</code>, optional</td>
+<td></td>
+</tr>
+<tr>
+<td><code>authors</code></td>
+<td>list of <code>str</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>source_url</code></td>
+<td><code>str</code>, optional</td>
+<td>Where the PDF was got from</td>
+</tr>
+</tbody>
+</table>
+<h3 id="quotestatus"><code>QuoteStatus</code><a class="headerlink" href="#quotestatus" title="Permanent link">&para;</a></h3>
+<p>Whether a quote is in the paper it is said to be in.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>state</code></td>
+<td><code>str</code></td>
+<td><code>found</code>; <code>elsewhere</code>, in the paper but not on the page its location gives; <code>not_found</code>; or <code>no_paper</code>, where the paper isn't in the cache</td>
+</tr>
+<tr>
+<td><code>page</code></td>
+<td><code>int</code>, optional</td>
+<td>The page it is on, from 1, where it is in the paper</td>
+</tr>
+</tbody>
+</table>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="p">{</span><span class="nt">&quot;state&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;found&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;page&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">}</span>
+</span></code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-circle-arrow-up" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../api/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Python API">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Python API
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../../community/" class="md-footer__link md-footer__link--next" aria-label="Next: Overview">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Overview
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      &copy; 2026 ASTRA Contributors
+    </div>
+  
+  
+    Made with
+    <a href="https://zensical.org/" target="_blank" rel="noopener">
+      Zensical
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate":null,"base":"../..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.tabs.link","content.tooltips","navigation.footer","navigation.instant","navigation.instant.prefetch","navigation.instant.progress","navigation.path","navigation.sections","navigation.tabs","navigation.tabs.sticky","navigation.top","navigation.tracking","search.highlight","search.suggest"],"search":"../../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":{"provider":"mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.dbc0afdc.min.js"></script>
+      
+    
+  </body>
+</html>

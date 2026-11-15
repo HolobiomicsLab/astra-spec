@@ -1,0 +1,1764 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="ASTRA — Agentic Schema for Transparent Research Analysis.">
+      
+      
+        <meta name="author" content="Lightcone Research">
+      
+      
+        <link rel="canonical" href="https://astra-spec.org/tools/api/">
+      
+      
+        <link rel="prev" href="../cli/">
+      
+      
+        <link rel="next" href="../data-model/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.svg">
+      <meta name="generator" content="zensical-0.0.40">
+    
+    
+      
+        <title>Python API - ASTRA</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.fba56155.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/modern/palette.dfe2e883.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/astra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  
+  <link rel="icon" href="../../assets/favicon.ico" sizes="48x48">
+  <link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+  <meta name="theme-color" content="#F8F7F3" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#221F20" media="(prefers-color-scheme: dark)">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="ASTRA">
+  <meta property="og:title" content="Python API - ASTRA">
+  <meta property="og:description" content="ASTRA — Agentic Schema for Transparent Research Analysis.">
+  <meta property="og:image" content="https://astra-spec.org/latest/assets/brand/astra-social-card-1280x640.png">
+  <meta property="og:image:width" content="1280">
+  <meta property="og:image:height" content="640">
+  <meta name="twitter:card" content="summary_large_image">
+
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-label="Navigation"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#python-api" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="ASTRA" class="md-header__button md-logo" aria-label="ASTRA" data-md-component="logo">
+      
+  <img src="../../assets/brand/astra-compact.svg" alt="ASTRA">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Navigation">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ASTRA
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Python API
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-moon" viewBox="0 0 24 24"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Search">
+  <button type="button" class="md-search__button">
+    Search
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+        <a href="https://github.com/astra-project/astra-spec" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    astra-project/astra-spec
+  </div>
+</a>
+      
+    </div>
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../.." class="md-tabs__link">
+          
+  
+  Documentation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../specification/" class="md-tabs__link">
+          
+  
+  Specification
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  Python & CLI
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../community/" class="md-tabs__link">
+          
+  
+  Community
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="ASTRA" class="md-nav__button md-logo" aria-label="ASTRA" data-md-component="logo">
+      
+  <img src="../../assets/brand/astra-compact.svg" alt="ASTRA">
+
+    </a>
+    ASTRA
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/astra-project/astra-spec" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    astra-project/astra-spec
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Documentation
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  Documentation
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Home
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Installation
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Getting started
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  About
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Specification
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  Specification
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../specification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Format reference
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../elements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Field reference
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Python & CLI
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  Python & CLI
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Overview
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  CLI reference
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Python API
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Python API
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#reading-an-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Reading an analysis
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validate" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>validate</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resolve" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>resolve</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#status" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>status</code>
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="status">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#asking-for-both" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Asking for both
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#init_analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>init_analysis</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#write_records" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>write_records</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#papers" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Papers
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Papers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paper" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>paper</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#add_paper" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>add_paper</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verify_quote" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>verify_quote</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Errors
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-runner-in-brief" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        A runner, in brief
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../data-model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Data model
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Community
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  Community
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Overview
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rfc-process/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  RFC process
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../governance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Governance
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#reading-an-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Reading an analysis
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validate" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>validate</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resolve" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>resolve</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#status" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>status</code>
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="status">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#asking-for-both" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Asking for both
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#init_analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>init_analysis</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#write_records" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>write_records</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#papers" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Papers
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Papers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paper" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>paper</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#add_paper" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>add_paper</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verify_quote" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>verify_quote</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Errors
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-runner-in-brief" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        A runner, in brief
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+
+              
+              <article class="md-content__inner md-typeset">
+                
+  
+  
+    <a class="astra-project" href="https://github.com/astra-project/astra-tools/tree/v0.3.0rc2/docs">astra-tools <span>v0.3.0rc2</span>
+    </a>
+  
+  
+                  
+  
+  
+
+
+<h1 id="python-api">Python API<a class="headerlink" href="#python-api" title="Permanent link">&para;</a></h1>
+<p><code>astra.api</code> is the whole public surface of astra-tools, and the one module another package
+imports. Everything else is private and may change.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">astra</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span>
+</span></code></pre></div>
+<p>It holds eight functions, the classes they return (<a href="../data-model/">Data model</a>) and the errors
+they raise (<a href="#errors">Errors</a>).</p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>What it does</th>
+<th>Returns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="#validate"><code>validate</code></a></td>
+<td>Says whether an analysis is valid</td>
+<td><a href="../data-model/#validationreport"><code>ValidationReport</code></a></td>
+</tr>
+<tr>
+<td><a href="#resolve"><code>resolve</code></a></td>
+<td>Says what an analysis means</td>
+<td><a href="../data-model/#resolvedanalysis"><code>ResolvedAnalysis</code></a></td>
+</tr>
+<tr>
+<td><a href="#status"><code>status</code></a></td>
+<td>Says how each of its results stands: whether its record still holds</td>
+<td><a href="../data-model/#statusreport"><code>StatusReport</code></a></td>
+</tr>
+<tr>
+<td><a href="#init_analysis"><code>init_analysis</code></a></td>
+<td>Makes a folder an analysis, where it isn't one</td>
+<td>nothing</td>
+</tr>
+<tr>
+<td><a href="#write_records"><code>write_records</code></a></td>
+<td>Writes a result's record at each of its places</td>
+<td>nothing</td>
+</tr>
+<tr>
+<td><a href="#paper"><code>paper</code></a></td>
+<td>Looks a paper up in the paper cache</td>
+<td><a href="../data-model/#paper"><code>Paper</code></a>, or <code>None</code></td>
+</tr>
+<tr>
+<td><a href="#add_paper"><code>add_paper</code></a></td>
+<td>Puts a paper in the paper cache</td>
+<td><a href="../data-model/#paper"><code>Paper</code></a></td>
+</tr>
+<tr>
+<td><a href="#verify_quote"><code>verify_quote</code></a></td>
+<td>Seeks a quote in a cached paper</td>
+<td><a href="../data-model/#quotestatus"><code>QuoteStatus</code></a></td>
+</tr>
+</tbody>
+</table>
+<p>The first three are functions of the analysis's files and of git, and nothing else. None runs a
+recipe. What to build, in what order, where and in which environment is a runner's own
+business, and nothing here says it.</p>
+<h2 id="reading-an-analysis">Reading an analysis<a class="headerlink" href="#reading-an-analysis" title="Permanent link">&para;</a></h2>
+<p><code>validate</code>, <code>resolve</code> and <code>status</code> read an analysis the same way. <code>path</code> is the analysis's
+folder, the current folder by default, and it holds the analysis's <code>astra.yaml</code>: nothing is
+searched for. The analysis is read in the working tree of the git repository that holds it, and
+each analysis it declares is read with it, in the working tree or at its commit.</p>
+<p>A commit of another repository is fetched into the cache, once. With <code>offline=True</code> nothing is
+fetched, and only the commits kept from earlier fetches can be read.</p>
+<p>All three raise:</p>
+<ul>
+<li><a href="#errors"><code>NoAnalysisError</code></a> where <code>path</code> holds no <code>astra.yaml</code>;</li>
+<li><a href="#errors"><code>GitError</code></a> where git can't be run;</li>
+<li><a href="#errors"><code>CacheError</code></a> where the cache can't be used;</li>
+<li><code>OSError</code> where a file can't be read.</li>
+</ul>
+<h2 id="validate"><code>validate</code><a class="headerlink" href="#validate" title="Permanent link">&para;</a></h2>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">offline</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ValidationReport</span>
+</span></code></pre></div>
+<p>The validator's report on the analysis: a <a href="../data-model/#diagnostic"><code>Diagnostic</code></a> for each
+parse, schema and validator rule it breaks, over its whole stack. An analysis that breaks a
+<code>MUST</code> isn't an error of the function: the report says so, in <code>valid</code> and in its diagnostics.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">report</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="s2">&quot;my-analysis&quot;</span><span class="p">)</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">for</span> <span class="n">diagnostic</span> <span class="ow">in</span> <span class="n">report</span><span class="o">.</span><span class="n">diagnostics</span><span class="p">:</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="n">at</span> <span class="o">=</span> <span class="n">diagnostic</span><span class="o">.</span><span class="n">location</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">at</span><span class="o">.</span><span class="n">file</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">at</span><span class="o">.</span><span class="n">line</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">diagnostic</span><span class="o">.</span><span class="n">level</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">diagnostic</span><span class="o">.</span><span class="n">code</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">diagnostic</span><span class="o">.</span><span class="n">message</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span></code></pre></div>
+<h2 id="resolve"><code>resolve</code><a class="headerlink" href="#resolve" title="Permanent link">&para;</a></h2>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">resolve</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">offline</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ResolvedAnalysis</span>
+</span></code></pre></div>
+<p>The analysis, resolved: every analysis of its stack with what it declares, each universe's
+selection, and its results, each with its places, what it reads and its command as it runs. It
+also gives <code>head</code>, the commit the repository is on. Every rule of the specification is already applied, so a reader follows ids and applies
+none itself.</p>
+<p>Raises <a href="#errors"><code>InvalidAnalysisError</code></a> where the analysis breaks a <code>MUST</code>: only a valid
+analysis resolves. The error's <code>report</code> is the validator's report.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">analysis</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span><span class="s2">&quot;my-analysis&quot;</span><span class="p">)</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">analysis</span><span class="o">.</span><span class="n">results</span><span class="p">:</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">places</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">file_path</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">command</span><span class="p">)</span>
+</span></code></pre></div>
+<h2 id="status"><code>status</code><a class="headerlink" href="#status" title="Permanent link">&para;</a></h2>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">status</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">offline</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">StatusReport</span>
+</span></code></pre></div>
+<p>How the analysis's results stand: for each result that <code>resolve</code> gives, its
+<a href="../data-model/#status"><code>Status</code></a>, under the result's id; and the status of each evidence that
+cites an output. The records and bytes are the ones in the working tree.</p>
+<p>A result's status says whether its record still holds: whether anything the result is made
+from has changed since the commit the record names. This is what the specification calls
+checking, and its <a href="https://astra-spec.org/0.1/specification/#rules">check rules</a> are the ones
+a status reports.</p>
+<p>The report also says where the <a href="../data-model/#bytes">bytes</a> of each result and of each input
+are, and which large-file tool keeps them. A result's state doesn't depend on its bytes: a
+clone that hasn't fetched them reads as up to date. astra-tools never fetches, so a runner
+reads what needs it:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">for</span> <span class="n">ref</span><span class="p">,</span> <span class="n">content</span> <span class="ow">in</span> <span class="n">report</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>    <span class="k">if</span> <span class="n">content</span><span class="o">.</span><span class="n">state</span> <span class="o">==</span> <span class="s2">&quot;absent&quot;</span><span class="p">:</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ref</span><span class="si">}</span><span class="s2"> needs fetching with </span><span class="si">{</span><span class="n">content</span><span class="o">.</span><span class="n">kept_by</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span></code></pre></div>
+<p>git-annex and Git LFS are read without their content. An input kept by DVC must be pulled for
+the results made from it to be compared (<a href="../data-model/#bytes">why</a>).</p>
+<p>The report holds none of the analysis: <code>resolve</code> gives that. Raises
+<a href="#errors"><code>InvalidAnalysisError</code></a> where the analysis breaks a <code>MUST</code>.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">report</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">status</span><span class="p">(</span><span class="s2">&quot;my-analysis&quot;</span><span class="p">)</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="k">for</span> <span class="nb">id</span><span class="p">,</span> <span class="n">status</span> <span class="ow">in</span> <span class="n">report</span><span class="o">.</span><span class="n">statuses</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    <span class="nb">print</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="n">status</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="n">status</span><span class="o">.</span><span class="n">bytes</span><span class="p">,</span> <span class="p">[</span><span class="n">broken</span><span class="o">.</span><span class="n">code</span> <span class="k">for</span> <span class="n">broken</span> <span class="ow">in</span> <span class="n">status</span><span class="o">.</span><span class="n">why</span><span class="p">])</span>
+</span></code></pre></div>
+<h3 id="asking-for-both">Asking for both<a class="headerlink" href="#asking-for-both" title="Permanent link">&para;</a></h3>
+<p>A runner needs both what the results are and how each stands, so it calls <code>resolve</code> and
+<code>status</code>. Each reads the working tree, and each gives <code>head</code>, the commit the repository was on.
+Where the two differ, something was committed between the calls, and the runner asks again:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">analysis</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span><span class="n">folder</span><span class="p">)</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="n">report</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">status</span><span class="p">(</span><span class="n">folder</span><span class="p">)</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="k">if</span> <span class="n">report</span><span class="o">.</span><span class="n">head</span> <span class="o">!=</span> <span class="n">analysis</span><span class="o">.</span><span class="n">head</span><span class="p">:</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;the repository moved between the two readings: ask again&quot;</span><span class="p">)</span>
+</span></code></pre></div>
+<p><code>head</code> names the commit, not the files. A runner builds only from a committed tree, so for it
+the same <code>head</code> is the same files. Where the working tree has uncommitted changes, two readings
+at the same <code>head</code> can still differ.</p>
+<h2 id="init_analysis"><code>init_analysis</code><a class="headerlink" href="#init_analysis" title="Permanent link">&para;</a></h2>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">init_analysis</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</span></code></pre></div>
+<p>Converges <code>directory</code> into an analysis. Where it has no <code>astra.yaml</code>, one is written with a
+<code>spec_version</code> and a label, and nothing declared. The folder is made if need be.</p>
+<p>It is idempotent: an <code>astra.yaml</code> already there is left exactly as it is. A second call changes
+nothing, and a folder that already holds an analysis is safe to pass.</p>
+<p>Nothing else is written or looked at, so a tool scaffolds into a folder under its own
+conventions. <a href="../cli/#astra-init"><code>astra init</code></a> calls it, and adds a <code>.gitignore</code> and a git
+repository.</p>
+<p>Raises <code>OSError</code> where the file can't be written.</p>
+<h2 id="write_records"><code>write_records</code><a class="headerlink" href="#write_records" title="Permanent link">&para;</a></h2>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">write_records</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">content_hash</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">generated_by</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</span></code></pre></div>
+<p>Records a result as a run made it. <code>folder</code> is the analysis's folder, <code>result</code> a
+<a href="../data-model/#result"><code>Result</code></a> of its resolved analysis, <code>content_hash</code> and <code>size</code> the hash
+(<code>sha256:&lt;hex&gt;</code>) and size of the bytes the recipe made, and <code>generated_by</code> the run, a
+<a href="../data-model/#generation"><code>Generation</code></a>.</p>
+<p>A <a href="../data-model/#provenancerecord"><code>ProvenanceRecord</code></a> is written at each of the result's
+places, with that place's address. Each is JSON with sorted keys, written to a temporary file
+and moved into place.</p>
+<p>What a record says is the runner's to find out, and true of its run: this function hashes no
+file and reads no checkout.</p>
+<p>Raises <code>ValueError</code>, and writes nothing, where:</p>
+<ul>
+<li><code>result</code> is a result from a commit (it has a <code>commit</code>): it is never built, and its places
+  aren't in the working tree;</li>
+<li>the record would be invalid: <code>generated_by</code> hasn't one item of <code>inputs</code> for each entry the
+  result's output lists, or a field hasn't the form the record schema asks for.</li>
+</ul>
+<p>Raises <code>OSError</code> where a record can't be written.</p>
+<h2 id="papers">Papers<a class="headerlink" href="#papers" title="Permanent link">&para;</a></h2>
+<p>The paper functions are apart from the rest. They aren't functions of an analysis's files: the
+paper cache is a folder of this machine, <code>add_paper</code> uses the network, and matching a quote
+against a PDF's text is astra-tools' own, as the specification has no rule on it.</p>
+<p>A paper is kept under its DOI as it was given and, where one was given, its version. The
+lookup is exact: <code>version=7</code> and no version are two papers.</p>
+<p>All three raise <a href="#errors"><code>CacheError</code></a> where the cache can't be used.</p>
+<h3 id="paper"><code>paper</code><a class="headerlink" href="#paper" title="Permanent link">&para;</a></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">paper</span><span class="p">(</span><span class="n">doi</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Paper</span> <span class="o">|</span> <span class="kc">None</span>
+</span></code></pre></div>
+<p>The paper of <code>doi</code> in the paper cache, at <code>version</code> where evidence gives one; <code>None</code> where it
+isn't there.</p>
+<h3 id="add_paper"><code>add_paper</code><a class="headerlink" href="#add_paper" title="Permanent link">&para;</a></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">add_paper</span><span class="p">(</span><span class="n">doi</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pdf</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Paper</span>
+</span></code></pre></div>
+<p>Puts the paper of <code>doi</code> in the cache, and returns it. With <code>pdf</code>, the PDF at that path is kept.
+With none, an arXiv DOI (<code>10.48550/arXiv.&lt;id&gt;</code>) is downloaded from arXiv, at <code>version</code> where
+one is given; no other paper is downloaded. A paper already in the cache is returned as it is.</p>
+<p>Raises <a href="#errors"><code>PaperError</code></a> where no PDF can be got or the file isn't a PDF, and <code>OSError</code>
+where <code>pdf</code> can't be read.</p>
+<h3 id="verify_quote"><code>verify_quote</code><a class="headerlink" href="#verify_quote" title="Permanent link">&para;</a></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">verify_quote</span><span class="p">(</span><span class="n">doi</span><span class="p">,</span> <span class="n">quote</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QuoteStatus</span>
+</span></code></pre></div>
+<p>Whether <code>quote</code>, a <a href="../data-model/#textquoteselector"><code>TextQuoteSelector</code></a>, is in the cached
+paper of <code>doi</code>. With <code>location</code>, a <a href="../data-model/#fragmentselector"><code>FragmentSelector</code></a> that
+gives a page of a PDF (<code>page=6</code>), the quote is to be on that page. The arguments are the fields
+of an <a href="../data-model/#evidence"><code>Evidence</code></a>, so one from a resolved analysis passes straight in:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="k">for</span> <span class="n">each</span> <span class="ow">in</span> <span class="n">analysis</span><span class="o">.</span><span class="n">analyses</span><span class="p">:</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>    <span class="k">for</span> <span class="n">insight</span> <span class="ow">in</span> <span class="n">each</span><span class="o">.</span><span class="n">prior_insights</span><span class="p">:</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>        <span class="k">for</span> <span class="n">evidence</span> <span class="ow">in</span> <span class="n">insight</span><span class="o">.</span><span class="n">evidence</span><span class="p">:</span>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>            <span class="k">if</span> <span class="n">evidence</span><span class="o">.</span><span class="n">doi</span> <span class="ow">and</span> <span class="n">evidence</span><span class="o">.</span><span class="n">quote</span><span class="p">:</span>
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>                <span class="n">status</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">verify_quote</span><span class="p">(</span>
+</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>                    <span class="n">evidence</span><span class="o">.</span><span class="n">doi</span><span class="p">,</span>
+</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>                    <span class="n">evidence</span><span class="o">.</span><span class="n">quote</span><span class="p">,</span>
+</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>                    <span class="n">version</span><span class="o">=</span><span class="n">evidence</span><span class="o">.</span><span class="n">version</span><span class="p">,</span>
+</span><span id="__span-14-9"><a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>                    <span class="n">location</span><span class="o">=</span><span class="n">evidence</span><span class="o">.</span><span class="n">location</span><span class="p">,</span>
+</span><span id="__span-14-10"><a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>                <span class="p">)</span>
+</span><span id="__span-14-11"><a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>                <span class="nb">print</span><span class="p">(</span><span class="n">insight</span><span class="o">.</span><span class="n">ref</span><span class="p">,</span> <span class="n">status</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="n">status</span><span class="o">.</span><span class="n">page</span><span class="p">)</span>
+</span></code></pre></div>
+<p>The match allows for what extracting a PDF's text changes, and a quote's <code>prefix</code> or <code>suffix</code>
+tells one passage from another like it. A paper that isn't in the cache is a state of the
+status, <code>no_paper</code>, not an error.</p>
+<p>Raises <a href="#errors"><code>PaperError</code></a> where the PDF's text can't be read.</p>
+<h2 id="errors">Errors<a class="headerlink" href="#errors" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Raised where</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>NoAnalysisError</code></td>
+<td>A folder holds no <code>astra.yaml</code></td>
+</tr>
+<tr>
+<td><code>InvalidAnalysisError</code></td>
+<td>The analysis breaks a <code>MUST</code>, so it has no resolved analysis and no statuses. Its <code>report</code> attribute is the <a href="../data-model/#validationreport"><code>ValidationReport</code></a></td>
+</tr>
+<tr>
+<td><code>GitError</code></td>
+<td>git can't be run</td>
+</tr>
+<tr>
+<td><code>CacheError</code></td>
+<td>The cache can't be used where the environment puts it</td>
+</tr>
+<tr>
+<td><code>PaperError</code></td>
+<td>A paper can't be put in the cache, or its PDF's text can't be read</td>
+</tr>
+</tbody>
+</table>
+<h2 id="a-runner-in-brief">A runner, in brief<a class="headerlink" href="#a-runner-in-brief" title="Permanent link">&para;</a></h2>
+<p>This is the least a runner does with the API: ask for the analysis and for the status of its
+results, build what isn't <code>unchanged</code> in the order the results come in, and record each. It leaves out what the specification's runner rules
+ask for, such as building only from a committed tree.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">hashlib</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">UTC</span><span class="p">,</span> <span class="n">datetime</span>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="kn">from</span><span class="w"> </span><span class="nn">astra</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span>
+</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>
+</span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>
+</span><span id="__span-15-9"><a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="k">def</span><span class="w"> </span><span class="nf">digest</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+</span><span id="__span-15-10"><a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>    <span class="n">data</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">()</span>
+</span><span id="__span-15-11"><a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;sha256:</span><span class="si">{</span><span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</span><span id="__span-15-12"><a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>
+</span><span id="__span-15-13"><a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>
+</span><span id="__span-15-14"><a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a><span class="k">def</span><span class="w"> </span><span class="nf">now</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="__span-15-15"><a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>    <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">UTC</span><span class="p">)</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(</span><span class="n">timespec</span><span class="o">=</span><span class="s2">&quot;milliseconds&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;+00:00&quot;</span><span class="p">,</span> <span class="s2">&quot;Z&quot;</span><span class="p">)</span>
+</span><span id="__span-15-16"><a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>
+</span><span id="__span-15-17"><a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>
+</span><span id="__span-15-18"><a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a><span class="n">folder</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+</span><span id="__span-15-19"><a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a><span class="n">analysis</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span><span class="n">folder</span><span class="p">)</span>
+</span><span id="__span-15-20"><a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a><span class="n">report</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">status</span><span class="p">(</span><span class="n">folder</span><span class="p">)</span>
+</span><span id="__span-15-21"><a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a><span class="k">if</span> <span class="n">analysis</span><span class="o">.</span><span class="n">head</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">report</span><span class="o">.</span><span class="n">head</span> <span class="o">!=</span> <span class="n">analysis</span><span class="o">.</span><span class="n">head</span><span class="p">:</span>
+</span><span id="__span-15-22"><a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a>    <span class="k">raise</span> <span class="ne">SystemExit</span><span class="p">(</span><span class="s2">&quot;the repository has no commit, or moved between the two readings&quot;</span><span class="p">)</span>
+</span><span id="__span-15-23"><a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a><span class="n">analyses</span> <span class="o">=</span> <span class="p">{</span><span class="n">each</span><span class="o">.</span><span class="n">key</span><span class="p">:</span> <span class="n">each</span> <span class="k">for</span> <span class="n">each</span> <span class="ow">in</span> <span class="n">analysis</span><span class="o">.</span><span class="n">analyses</span><span class="p">}</span>
+</span><span id="__span-15-24"><a id="__codelineno-15-24" name="__codelineno-15-24" href="#__codelineno-15-24"></a><span class="n">inputs</span> <span class="o">=</span> <span class="p">{</span><span class="n">each</span><span class="o">.</span><span class="n">ref</span><span class="p">:</span> <span class="n">each</span> <span class="k">for</span> <span class="n">one</span> <span class="ow">in</span> <span class="n">analysis</span><span class="o">.</span><span class="n">analyses</span> <span class="k">for</span> <span class="n">each</span> <span class="ow">in</span> <span class="n">one</span><span class="o">.</span><span class="n">inputs</span><span class="p">}</span>
+</span><span id="__span-15-25"><a id="__codelineno-15-25" name="__codelineno-15-25" href="#__codelineno-15-25"></a><span class="n">results</span> <span class="o">=</span> <span class="p">{</span><span class="n">each</span><span class="o">.</span><span class="n">id</span><span class="p">:</span> <span class="n">each</span> <span class="k">for</span> <span class="n">each</span> <span class="ow">in</span> <span class="n">analysis</span><span class="o">.</span><span class="n">results</span><span class="p">}</span>
+</span><span id="__span-15-26"><a id="__codelineno-15-26" name="__codelineno-15-26" href="#__codelineno-15-26"></a>
+</span><span id="__span-15-27"><a id="__codelineno-15-27" name="__codelineno-15-27" href="#__codelineno-15-27"></a><span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">analysis</span><span class="o">.</span><span class="n">results</span><span class="p">:</span>  <span class="c1"># each comes after every result it reads</span>
+</span><span id="__span-15-28"><a id="__codelineno-15-28" name="__codelineno-15-28" href="#__codelineno-15-28"></a>    <span class="k">if</span> <span class="n">report</span><span class="o">.</span><span class="n">statuses</span><span class="p">[</span><span class="n">result</span><span class="o">.</span><span class="n">id</span><span class="p">]</span><span class="o">.</span><span class="n">state</span> <span class="o">==</span> <span class="s2">&quot;unchanged&quot;</span> <span class="ow">or</span> <span class="n">result</span><span class="o">.</span><span class="n">command</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-15-29"><a id="__codelineno-15-29" name="__codelineno-15-29" href="#__codelineno-15-29"></a>        <span class="k">continue</span>  <span class="c1"># up to date, or not built from the working tree alone</span>
+</span><span id="__span-15-30"><a id="__codelineno-15-30" name="__codelineno-15-30" href="#__codelineno-15-30"></a>    <span class="c1"># What each entry reads: an input&#39;s file, or another result&#39;s bytes.</span>
+</span><span id="__span-15-31"><a id="__codelineno-15-31" name="__codelineno-15-31" href="#__codelineno-15-31"></a>    <span class="n">read</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="__span-15-32"><a id="__codelineno-15-32" name="__codelineno-15-32" href="#__codelineno-15-32"></a>    <span class="k">for</span> <span class="n">source</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">inputs</span><span class="p">:</span>
+</span><span id="__span-15-33"><a id="__codelineno-15-33" name="__codelineno-15-33" href="#__codelineno-15-33"></a>        <span class="k">if</span> <span class="n">source</span><span class="o">.</span><span class="n">input</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-15-34"><a id="__codelineno-15-34" name="__codelineno-15-34" href="#__codelineno-15-34"></a>            <span class="n">path</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="n">source</span><span class="o">.</span><span class="n">input</span><span class="p">]</span><span class="o">.</span><span class="n">path</span>
+</span><span id="__span-15-35"><a id="__codelineno-15-35" name="__codelineno-15-35" href="#__codelineno-15-35"></a>        <span class="k">else</span><span class="p">:</span>
+</span><span id="__span-15-36"><a id="__codelineno-15-36" name="__codelineno-15-36" href="#__codelineno-15-36"></a>            <span class="n">path</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="n">source</span><span class="o">.</span><span class="n">result</span><span class="p">]</span><span class="o">.</span><span class="n">places</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">file_path</span>
+</span><span id="__span-15-37"><a id="__codelineno-15-37" name="__codelineno-15-37" href="#__codelineno-15-37"></a>        <span class="n">read</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">api</span><span class="o">.</span><span class="n">RecordedInput</span><span class="p">(</span><span class="n">source</span><span class="o">.</span><span class="n">entry</span><span class="p">,</span> <span class="o">*</span><span class="n">digest</span><span class="p">(</span><span class="n">folder</span> <span class="o">/</span> <span class="n">path</span><span class="p">)))</span>
+</span><span id="__span-15-38"><a id="__codelineno-15-38" name="__codelineno-15-38" href="#__codelineno-15-38"></a>    <span class="c1"># The recipe runs in the folder of the analysis its output belongs to.</span>
+</span><span id="__span-15-39"><a id="__codelineno-15-39" name="__codelineno-15-39" href="#__codelineno-15-39"></a>    <span class="n">owner</span> <span class="o">=</span> <span class="n">analyses</span><span class="p">[</span><span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">2</span><span class="p">])]</span>
+</span><span id="__span-15-40"><a id="__codelineno-15-40" name="__codelineno-15-40" href="#__codelineno-15-40"></a>    <span class="n">started</span> <span class="o">=</span> <span class="n">now</span><span class="p">()</span>
+</span><span id="__span-15-41"><a id="__codelineno-15-41" name="__codelineno-15-41" href="#__codelineno-15-41"></a>    <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">command</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cwd</span><span class="o">=</span><span class="n">folder</span> <span class="o">/</span> <span class="n">owner</span><span class="o">.</span><span class="n">folder</span><span class="p">,</span> <span class="n">check</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-15-42"><a id="__codelineno-15-42" name="__codelineno-15-42" href="#__codelineno-15-42"></a>    <span class="n">generation</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">Generation</span><span class="p">(</span>
+</span><span id="__span-15-43"><a id="__codelineno-15-43" name="__codelineno-15-43" href="#__codelineno-15-43"></a>        <span class="n">commit</span><span class="o">=</span><span class="n">analysis</span><span class="o">.</span><span class="n">head</span><span class="p">,</span>
+</span><span id="__span-15-44"><a id="__codelineno-15-44" name="__codelineno-15-44" href="#__codelineno-15-44"></a>        <span class="n">environment</span><span class="o">=</span><span class="n">api</span><span class="o">.</span><span class="n">Environment</span><span class="p">(</span><span class="s2">&quot;urn:example:python-3.13&quot;</span><span class="p">),</span>
+</span><span id="__span-15-45"><a id="__codelineno-15-45" name="__codelineno-15-45" href="#__codelineno-15-45"></a>        <span class="n">runner</span><span class="o">=</span><span class="n">api</span><span class="o">.</span><span class="n">Runner</span><span class="p">(</span><span class="s2">&quot;example-runner&quot;</span><span class="p">,</span> <span class="s2">&quot;0.1.0&quot;</span><span class="p">),</span>
+</span><span id="__span-15-46"><a id="__codelineno-15-46" name="__codelineno-15-46" href="#__codelineno-15-46"></a>        <span class="n">inputs</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="n">read</span><span class="p">),</span>
+</span><span id="__span-15-47"><a id="__codelineno-15-47" name="__codelineno-15-47" href="#__codelineno-15-47"></a>        <span class="n">started</span><span class="o">=</span><span class="n">started</span><span class="p">,</span>
+</span><span id="__span-15-48"><a id="__codelineno-15-48" name="__codelineno-15-48" href="#__codelineno-15-48"></a>        <span class="n">finished</span><span class="o">=</span><span class="n">now</span><span class="p">(),</span>
+</span><span id="__span-15-49"><a id="__codelineno-15-49" name="__codelineno-15-49" href="#__codelineno-15-49"></a>    <span class="p">)</span>
+</span><span id="__span-15-50"><a id="__codelineno-15-50" name="__codelineno-15-50" href="#__codelineno-15-50"></a>    <span class="n">api</span><span class="o">.</span><span class="n">write_records</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="o">*</span><span class="n">digest</span><span class="p">(</span><span class="n">folder</span> <span class="o">/</span> <span class="n">result</span><span class="o">.</span><span class="n">places</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">file_path</span><span class="p">),</span> <span class="n">generation</span><span class="p">)</span>
+</span></code></pre></div>
+<p>After it, <code>astra status</code> reads the record back:</p>
+<div class="language-console highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="gp">$ </span>astra<span class="w"> </span>status
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="go">fit#baseline  unchanged  present  .astra/records/baseline/fit.json</span>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="go">  made in urn:example:python-3.13 by example-runner 0.1.0</span>
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="go">1 result(s), 1 unchanged, 0 stale, 0 missing; 0 absent</span>
+</span></code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-circle-arrow-up" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../cli/" class="md-footer__link md-footer__link--prev" aria-label="Previous: CLI reference">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                CLI reference
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../data-model/" class="md-footer__link md-footer__link--next" aria-label="Next: Data model">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Data model
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      &copy; 2026 ASTRA Contributors
+    </div>
+  
+  
+    Made with
+    <a href="https://zensical.org/" target="_blank" rel="noopener">
+      Zensical
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate":null,"base":"../..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.tabs.link","content.tooltips","navigation.footer","navigation.instant","navigation.instant.prefetch","navigation.instant.progress","navigation.path","navigation.sections","navigation.tabs","navigation.tabs.sticky","navigation.top","navigation.tracking","search.highlight","search.suggest"],"search":"../../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":{"provider":"mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.dbc0afdc.min.js"></script>
+      
+    
+  </body>
+</html>
