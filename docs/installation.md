@@ -1,40 +1,54 @@
 # Installation
 
-This page gets the `astra` CLI installed and verified. From there, [getting started](getting-started.md) takes you from scaffold to a validated analysis in about ten minutes.
-
-If you'd rather see the schema first, jump to the [specification](specification.md).
+`astra` comes in the `astra-tools` package. It needs Python 3.11 or later and git, which it runs
+to read repositories.
 
 ## Install
 
-We recommend installing with [**uv**](https://docs.astral.sh/uv/) — Astral's fast Python package and project manager. If you don't have uv yet, follow the [official installation instructions](https://docs.astral.sh/uv/getting-started/installation/) (one-line install on macOS, Linux, and Windows).
+With [uv](https://docs.astral.sh/uv/), which keeps `astra` apart from your projects'
+environments:
 
-=== "uv (recommended)"
+```bash
+uv tool install astra-tools
+```
 
-    ```bash
-    uv tool install astra-tools
-    ```
+With pip:
 
-=== "pip"
+```bash
+pip install astra-tools
+```
 
-    ```bash
-    pip install astra-tools
-    ```
+While astra-tools for ASTRA 0.1 has only release candidates, uv and pip skip them. Ask for them
+with `uv tool install --prerelease allow astra-tools`, or `pip install --pre astra-tools`.
 
-=== "From source"
+To run it once without installing it, name the version:
 
-    ```bash
-    git clone https://github.com/LightconeResearch/ASTRA.git
-    cd ASTRA
-    uv pip install -e ".[dev]"
-    ```
+```bash
+uvx astra-tools@<version> validate
+```
 
-Verify the install:
+Check that it works:
 
 ```bash
 astra --version
 astra --help
 ```
 
-## Next: getting started
+## Which ASTRA it reads
 
-[Getting started](getting-started.md) is the tour of the format itself: scaffold a project, edit the analysis, validate it, inspect it, define universes, and attach evidence.
+astra-tools reads ASTRA 0.1 files, those whose `spec_version` is `0.1.x`. It installs the
+schemas and rules of the specification with it, as the `astra-spec` package. A file written for
+ASTRA 0.0.x states its version as `version:`, and fails the schema checks: `MISSING_FIELD` for
+`spec_version`, `UNKNOWN_FIELD` for `version`, and others. The 0.2 line of astra-tools reads such
+a file as it is:
+
+```bash
+uv tool install 'astra-tools<0.3'
+```
+
+## Next
+
+- [Getting started](https://astra-spec.org/0.1/getting-started/) writes a first analysis and
+  validates it.
+- The [CLI reference](cli.md) describes every command.
+- To work on astra-tools itself, see its [README](https://github.com/astra-project/astra-tools#readme).

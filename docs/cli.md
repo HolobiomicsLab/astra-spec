@@ -1,328 +1,412 @@
-# CLI Reference
+# CLI reference
 
-The `astra` command-line tool authors, validates, and inspects ASTRA analyses. It is shipped as the `astra-tools` package and is independent of any execution engine — it only reads, writes, and validates ASTRA YAML.
+`astra` is the command line of [astra-tools](https://github.com/astra-project/astra-tools). It
+validates ASTRA analyses, shows what they resolve to, and checks what was built against its
+records. It reads ASTRA 0.1 files; ASTRA 0.0.x files need the 0.2 line of astra-tools
+([Installation](installation.md#which-astra-it-reads)).
 
-## Installation
+`astra` runs no recipe. A runner, such as lightcone-cli, builds the results and writes their
+records, and `astra` reads them.
 
-```bash
-uv tool install astra-tools
-```
+## Conventions
 
-This installs the `astra` executable on your `PATH`, isolated from your project environments. See [Installation](installation.md#install) for `pip` and from-source alternatives. To verify:
+- **The analysis** a command reads is an `astra.yaml`, the root of its
+  [stack](https://astra-spec.org/0.1/specification/#rules). `validate` takes the file or its
+  folder, and with none validates every analysis under the current folder. `info` takes the
+  file with `-f`, and by default finds the `astra.yaml` in the current folder or the nearest
+  one above. `view`, `check` and `history` take **PATH**, the analysis's folder, the current
+  folder by default.
+- **Exit codes:**
+    - 0 when the command answers;
+    - 1 when the analysis breaks a `MUST`, a quote isn't verified, a planned result isn't
+      `unchanged`, or what was asked for isn't there;
+    - 2 for a usage error, an analysis that can't be read, a broken environment (git or the
+      cache unusable, a folder that can't be written), or an internal error.
+- **Output.** Problems are grouped by file, one per line, as `line:col level CODE message`. Each
+  code is a rule of the specification, listed under
+  [Rules](https://astra-spec.org/0.1/specification/#rules), or one of astra-tools' own:
+  `UNSUPPORTED_SPEC_VERSION`, `REMOTE_UNREACHABLE` and `COMMIT_NOT_ANCESTOR`, and, with
+  `validate --verify-evidence`, `EVIDENCE_PAPER_MISSING`, `EVIDENCE_PAPER_UNREADABLE` and
+  `EVIDENCE_QUOTE_NOT_FOUND`. `NO_COLOR` turns colour off.
+- **JSON.** `validate`, `info`, `view` and `check` take `--json`. Each JSON document names its
+  shape, such as `astra-validation-reports/1`, and a shape changes only under a new name.
+  `init --json` prints its convergence report, and `paper verify-quotes` reads and writes JSON.
+- **The cache** keeps the commits fetched from remotes, the validity of analyses from a commit,
+  the hashes of files, and papers with their extracted text and verified quotes. It sits outside
+  every repository, and everything in it is safe to delete. It is `~/.cache/astra` on Linux and
+  `~/Library/Caches/astra` on macOS; `ASTRA_CACHE_DIR`, an absolute path, moves it.
+- `astra --help`, and `--help` after any command, give each command's options.
+  `astra --version` gives astra-tools' version.
 
-```bash
-astra --version
-astra --help
-```
+The examples come from a small analysis, line-fit. It declares another analysis, noisy-line, at
+a commit, and fits a line to noisy-line's points two ways: by least squares, in a universe
+`ols`, and by the Huber loss, in a universe `huber`. Its `comparison` reads both fits.
 
 ## Commands at a glance
 
-| Command | Purpose |
-|---------|---------|
-| [`astra init`](#astra-init) | Converge a directory into a minimal ASTRA project (idempotent) |
-| [`astra validate`](#astra-validate) | Validate the whole project, or one analysis/universe file |
-| [`astra info`](#astra-info) | Show a summary of an analysis |
-| [`astra viz`](#astra-viz) | Visualise the decision space |
-| [`astra universe`](#astra-universe) | Generate and check universe files |
-| [`astra spec`](#astra-spec) | Render the schema as agent-friendly reference text |
-| [`astra guide`](#astra-guide) | Print the agent briefing (llms.txt) for the format |
-| [`astra schema`](#astra-schema) | Export or print the LinkML schema |
-| [`astra paper`](#astra-paper) | Manage cached papers and verify quotes |
-
-`astra` and most subcommands accept `--help` for full inline documentation.
-
----
+| Command | What it does |
+|---|---|
+| [`astra init`](#astra-init) | Make a minimal analysis, or complete one |
+| [`astra validate`](#astra-validate) | Validate an analysis and its whole stack |
+| [`astra info`](#astra-info) | Show an analysis and its stack in brief |
+| [`astra view`](#astra-view) | Show the analysis as it is in one universe |
+| [`astra check`](#astra-check) | Check the records and bytes of the planned results |
+| [`astra history`](#astra-history) | Show what git holds of a result's records over time |
+| [`astra spec`](#astra-spec) | Describe the fields of ASTRA files |
+| [`astra schema`](#astra-schema) | Show or export the LinkML schemas |
+| [`astra guide`](#astra-guide) | Print the guide for agents |
+| [`astra paper`](#astra-paper) | Keep papers by DOI, and verify quotes in them |
 
 ## `astra init`
 
-Converge a directory into a minimal ASTRA analysis scaffold. The scaffold contains an `astra.yaml` boilerplate, a `universes/baseline.yaml`, an empty `src/` for analysis code, and a `.gitignore`. By default a fresh git repository is initialised in the directory.
-
-`astra init` is **idempotent** — safe to re-run at any time. Each run creates whatever is missing and never overwrites existing files: a directory that already holds an `astra.yaml`, or any other files, is adopted rather than rejected. The boilerplate `astra.yaml` and `universes/baseline.yaml` are written as one unit — if you already have your own `astra.yaml`, the boilerplate baseline (which references the boilerplate's example decision) is not written next to it.
-
-```bash
-astra init my-analysis
-astra init my-analysis --no-git     # skip git initialisation
-astra init .                        # converge the current directory
-astra init --check                  # report drift without writing; exit 1 if not converged
-astra init --check --json           # machine-readable report (for scripts and agents)
+```
+astra init [DIRECTORY] [--check] [--json]
 ```
 
-`--check` reports what a run would create, writes nothing, and exits non-zero when the directory is not converged. `--json` emits the report as JSON:
+Converges DIRECTORY, the current folder by default, into a minimal analysis. It creates whatever
+is missing (an `astra.yaml` with a `spec_version` and a label, a `.gitignore`, and a git
+repository with a first commit) and never overwrites a file, so it is safe to run again; a
+folder that already holds an `astra.yaml`, or any other file, is adopted. Where a git repository
+already holds DIRECTORY, no new one is made inside it. Where git knows no user name and email,
+the new repository gets no first commit.
 
-```json
-{
-  "converged": false,
-  "created": ["astra.yaml", "universes/", "src/", ".gitignore"],
-  "repaired": [],
-  "unchanged": [],
-  "warnings": []
-}
+| Option | Meaning |
+|---|---|
+| `--check` | Write nothing: say what would be created, and exit 1 if anything would |
+| `--json` | Print the convergence report as JSON: `converged`, and the lists `created`, `repaired`, `unchanged` and `warnings` |
+
+```console
+$ astra init my-analysis
+✓ created astra.yaml
+✓ created .gitignore
+✓ created .git
+✓ Converged ASTRA analysis scaffold: my-analysis
+$ cat my-analysis/astra.yaml
+# ASTRA Analysis Specification
+
+spec_version: "0.1.0"
+label: "my-analysis"
+$ astra init my-analysis
+✓ my-analysis already converged
 ```
-
-**Resulting layout:**
-
-```
-my-analysis/
-├── astra.yaml              # Analysis specification (source of truth)
-├── .gitignore
-├── src/                    # Your analysis code
-└── universes/
-    └── baseline.yaml       # Default decision selection
-```
-
-The boilerplate `astra.yaml` includes a single example decision and outputs marked with `TODO:` to guide you through filling them in.
-
----
 
 ## `astra validate`
 
-Validate the whole project, or a single analysis/universe file.
-
-```bash
-astra validate                                  # whole project (everything under cwd)
-astra validate astra.yaml                       # one analysis
-astra validate universes/baseline.yaml          # universe (analysis auto-discovered)
-astra validate universes/foo.yaml -a astra.yaml # universe with explicit analysis
+```
+astra validate [FILE] [-e|--verify-evidence] [--skip-evidence] [--json] [--offline]
 ```
 
-With no FILE, every analysis spec and universe file under the current directory is validated. Discovery skips hidden and vendored directories (`.*`, `node_modules`, `venv`, `__pycache__`); universe files are recognised inside a `universes/` directory or by `universe` in their filename; and an `astra.yaml` referenced as an external `path:` sub-analysis of another spec is validated in context through its root, not standalone. Validation keeps going past failures, then exits non-zero listing the files that failed.
+Checks every parse, schema and validator rule
+([Rules](https://astra-spec.org/0.1/specification/#rules)) over the whole stack: the analysis
+FILE names, an `astra.yaml` or its folder, and every analysis it declares, at their commits.
+With no FILE, it validates every root analysis under the current folder: each `astra.yaml` that
+no other one declares, hidden, vendored and `results/` folders skipped, and ends with a summary
+line. It reads no results; `astra check` does. Exits 0 when every analysis is valid and 1 when
+one breaks a `MUST`. A `SHOULD` that is broken is a warning and doesn't change the exit code.
 
-Validation runs in stages:
+| Option | Meaning |
+|---|---|
+| `-e`, `--verify-evidence` | Also verify each quote the evidence takes from a paper cited by DOI, in the paper the cache holds ([`astra paper add`](#astra-paper)) |
+| `--skip-evidence` | Say nothing of the evidence: without it, an analysis that has evidence gets a note to run with `--verify-evidence` |
+| `--json` | Print the reports as JSON (`astra-validation-reports/1`) |
+| `--offline` | Fetch nothing: use only the commits already in the cache |
 
-1. **Schema validation** — structure, types, required fields, format patterns (Pydantic models generated from the LinkML schema).
-2. **Semantic validation** — duplicate IDs, default options exist, `from:` paths and tree-path references resolve, recipe template placeholders match `Output.inputs` / `Output.decisions`, universe selections match analysis decisions, constraints respected, etc.
+An analysis declared by `url` and `commit` is fetched into the cache, once.
 
-### Recommended fields
+```console
+$ astra validate
+astra.yaml
+  4:11 error MISSING_INPUT_FILE `data.csv` names no file, and no stand-in of Git LFS, git-annex, DVC
+  10:17 error UNRESOLVED_ADDRESS `method` names nothing: this analysis has no decision `method`
+astra.yaml: invalid, 2 error(s), 0 warning(s)
 
-The schema marks some fields *recommended* rather than required. An analysis that omits one still validates — it is a soft signal that the field will be required in a future release, not an error.
-
-Currently there is one: `Output.format`, the artifact's serialization (a lowercase extension token such as `png`, `csv`, or `parquet`). It is optional throughout 0.0.x and **becomes required on every non-aliased output at 0.1.0**, so add it to your outputs now.
-
-### Evidence verification
-
-When an analysis declares `prior_insights:` or `findings:`, `astra validate` can additionally check that quoted text in literature evidence actually appears in the source PDFs:
-
-```bash
-astra validate astra.yaml --verify-evidence
-astra validate astra.yaml --skip-evidence    # skip even when present
+1/1 file(s) failed validation: astra.yaml
 ```
 
-Papers must be cached locally first with [`astra paper add`](#astra-paper-add). Evidence backed by analysis artifacts (typical for `findings`) is reported as `SKIPPED` until the artifact is materialised.
+With `--verify-evidence`, a quote that isn't verified is an error of the report, at its place in
+`astra.yaml`, and the command exits 1:
 
-**Options:**
+- `EVIDENCE_PAPER_MISSING`, at the `doi`: the paper isn't in the cache;
+- `EVIDENCE_PAPER_UNREADABLE`, at the `doi`: the text of the paper in the cache can't be read;
+- `EVIDENCE_QUOTE_NOT_FOUND`, at the `quote`: the quote isn't in the paper. Where the evidence
+  has a `location` that gives a page (`page=6`), the quote must be on that page; with none, it
+  is found on any page.
 
-| Flag | Meaning |
-|------|---------|
-| `-a, --analysis PATH` | Analysis file (when validating a single universe file) |
-| `-e, --verify-evidence` | Verify evidence quotes against cached papers |
-| `--skip-evidence` | Skip evidence verification |
-| `--json` | Emit the report as a single JSON-encoded string (exit code unchanged) |
+Evidence that cites an output, as an `artifact`, is counted as skipped: `astra check` gives it
+the status of the result it cites. A line sums up each of `prior_insights` and `findings`.
 
----
+```console
+$ astra validate -e
+astra.yaml
+  41:14 error EVIDENCE_PAPER_MISSING the paper of 10.1214/aoms/1177703732 isn't in the cache, so its quote isn't verified: run `astra paper add 10.1214/aoms/1177703732`
+astra.yaml: invalid, 1 error(s), 0 warning(s)
+Evidence (prior_insights): 0/1 verified, 1 failed
+
+1/1 file(s) failed validation: astra.yaml
+```
+
+`--json` prints one document, with FILE or without: whether every analysis is valid, and each
+analysis's report, whose `diagnostics` hold the evidence's errors too.
+
+```console
+$ astra validate --json
+{
+  "shape": "astra-validation-reports/1",
+  "valid": true,
+  "reports": [
+    {
+      "shape": "astra-validation-report/1",
+      "root": "astra.yaml",
+      "valid": true,
+      "diagnostics": [],
+      "unchecked": []
+    }
+  ]
+}
+```
 
 ## `astra info`
 
-Print a summary of an analysis: name, version, description, counts, and tables of inputs, outputs, and decisions. The analysis file is auto-discovered by walking up from the current directory if `--file` is not provided.
-
-```bash
-astra info                          # full summary
-astra info --decisions              # decisions only
-astra info --inputs                 # inputs only
-astra info --outputs                # outputs only
-astra info -f path/to/astra.yaml    # explicit file
-astra info --json                   # summary as one JSON-encoded string
+```
+astra info [-f FILE] [-d] [-i] [-o] [--json]
 ```
 
-The header includes a `Layout:` line summarising the sub-analyses the spec declares (with directories for external `path:` ones) and the universe files in `universes/`; it is omitted for flat analyses. Decisions are displayed as a tree, with sub-analyses nested under their parent.
+Shows the analysis in FILE, by default the `astra.yaml` in the current folder or the nearest
+folder above: its label and description, how many inputs, outputs, decisions and universes it
+has, then each of them. With `-d` (`--decisions`), `-i` (`--inputs`) or `-o` (`--outputs`), only
+those parts are shown. A switch shows the decision it switches on and its cases. Each other
+analysis of the stack follows, the same way, headed by the address that reaches it and its file,
+with its commit for one read at a commit. It checks nothing. `--json` prints every analysis of
+the stack as JSON (`astra-info/1`), the root first. Exits 1 where there is no `astra.yaml`, or
+no stack to show.
 
----
+```console
+$ astra info
+Line fit
+Spec version: 0.1.0
 
-## `astra viz`
+Fit a line to noisy-line's points, by least squares and by the Huber loss.
 
-Visualise the decision space.
+Inputs: 0 | Outputs: 2 | Decisions: 1 | Universes: 2
+Layout: 1 sub-analysis
 
-```bash
-astra viz                           # ASCII tree (default)
-astra viz --format mermaid          # Mermaid diagram (paste into Markdown)
+Inputs:
+┏━━━━┳━━━━━━┳━━━━━━━━━━━━━┓
+┃ ID ┃ Path ┃ Description ┃
+┡━━━━╇━━━━━━╇━━━━━━━━━━━━━┩
+└────┴──────┴─────────────┘
+
+Outputs:
+┏━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ ID         ┃ Type  ┃ Recipe                                     ┃ Description                    ┃
+┡━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ fit        │ table │ python3 src/fit.py {decisions.method}      │ The fitted slope and intercept │
+│            │       │ {inputs.noisy.points} {output}             │                                │
+│ comparison │ table │ python3 src/compare.py {inputs} {output}   │ Both fits, side by side        │
+└────────────┴───────┴────────────────────────────────────────────┴────────────────────────────────┘
+
+Decisions:
+method: Fitting method
+├── Rationale: Outliers pull a least-squares fit.
+└── Options:
+    ├── ols: Least squares
+    └── huber: Huber loss
+
+Universes:
+  ols
+  huber
+
+Analysis: noisy  astra.yaml at 18cfe9d5695d7fc13a3d93bbbba2f6a644bd284d from file:///…/noisy-line
+Noisy line
+Spec version: 0.1.0
+
+Inputs: 1 | Outputs: 1 | Decisions: 0 | Universes: 0
+
+Inputs:
+┏━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━━━━━━━━━┓
+┃ ID     ┃ Path        ┃ Description ┃
+┡━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━━━━━━┩
+│ config │ config.json │             │
+└────────┴─────────────┴─────────────┘
+
+Outputs:
+┏━━━━━━━━┳━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━┓
+┃ ID     ┃ Type ┃ Recipe                                         ┃ Description ┃
+┡━━━━━━━━╇━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━┩
+│ points │ data │ python3 src/points.py {inputs.config} {output} │             │
+└────────┴──────┴────────────────────────────────────────────────┴─────────────┘
+
+Decisions:
 ```
 
-The Mermaid output renders all decisions and options, highlights defaults, and draws `incompatible_with` / `requires` constraint edges. It can be embedded directly in Markdown documentation:
+## `astra view`
 
-````markdown
-```mermaid
-graph TD
-    ...
 ```
-````
-
----
-
-## `astra universe`
-
-Universe management commands.
-
-### `astra universe generate`
-
-Generate a universe YAML file from the analysis's `default` options.
-
-```bash
-astra universe generate --name baseline
-astra universe generate -n svm-focused -d "SVM with standard scaling"
-astra universe generate -n baseline -o custom/path.yaml
+astra view UNIVERSE [PATH] [--json]
 ```
 
-Every decision in the analysis tree must declare a `default`; otherwise the command lists the missing decisions and exits.
+Shows the analysis as it is in UNIVERSE. For each analysis of the stack, it gives whether that
+analysis is built in UNIVERSE
+([Elements](https://astra-spec.org/0.1/specification/#elements)); the option selected for each
+decision, or that the universe doesn't use it
+([Results](https://astra-spec.org/0.1/specification/#results)); each output's result and where
+it goes, or why it has none; and the case each switch takes. `--json` prints it as
+`astra-universe-view/1`. Exits 2 where the analysis has no universe UNIVERSE.
 
-**Options:**
-
-| Flag | Default | Meaning |
-|------|---------|---------|
-| `-n, --name` | `baseline` | Universe ID and filename stem |
-| `-a, --analysis` | auto | Analysis file |
-| `-o, --output` | `universes/<name>.yaml` | Output path |
-| `-d, --description` | _(none)_ | Universe description string |
-
-### `astra universe check`
-
-Validate a universe file against the constraints declared in the analysis.
-
-```bash
-astra universe check universes/baseline.yaml
-astra universe check universes/foo.yaml -a path/to/astra.yaml
+```console
+$ astra view huber
+universe huber
+astra.yaml  built
+  method       huber
+  fit          fit#huber  results/huber/fit.json
+  comparison   comparison  results/comparison.json
+astra.yaml at 18cfe9d5695d7fc13a3d93bbbba2f6a644bd284d from file:///…/noisy-line  built
+  points       points  results/points.csv at 18cfe9d5695d7fc13a3d93bbbba2f6a644bd284d
 ```
 
-The same checks run inside `astra validate`, but `universe check` is convenient when iterating on universe files without re-running the full analysis validation.
+## `astra check`
 
----
+```
+astra check [PATH] [--at REV] [--json]
+```
+
+Checks each planned result's record and bytes, at each of its places
+([Results](https://astra-spec.org/0.1/specification/#results)):
+
+- the record is `unchanged`, `stale` (something it was made from has changed since) or `missing`;
+- the bytes are `present` (the ones the record gives, at their default place) or `absent`.
+
+Then it gives each evidence the status of what it cites. A stale result comes with the reasons.
+Where the analysis breaks a `MUST`, its errors come first, and only the results they leave
+determined are shown. Exits 0 when every planned result and evidence is `unchanged`, and 1
+otherwise.
+
+| Option | Meaning |
+|---|---|
+| `--at REV` | Check the analysis as it is at the commit REV names, with its records and bytes there |
+| `--json` | Print the report as JSON (`astra-check-report/1`) |
+
+Here the `huber` universe has been edited to select `ols`, and nothing has been built since:
+
+```console
+$ astra check
+.astra/records/points.json at 18cfe9d5695d7fc13a3d93bbbba2f6a644bd284d  points  unchanged  present
+.astra/records/ols/fit.json  fit#ols  unchanged  present
+.astra/records/huber/fit.json  fit#huber  stale  present
+  error STALE_RESULT `method` selects `ols` in `huber`, where it selected `huber` at 3b70b4352de6
+.astra/records/comparison.json  comparison  stale  present
+  error STALE_RESULT `fit#huber`, which it reads, is stale
+astra.yaml
+  53:19 error STALE_EVIDENCE `comparison` cites `comparison`, whose record is stale
+astra.yaml: 4 place(s) of planned results, 2 unchanged, 2 stale, 0 missing; 0 absent
+```
+
+An input whose content is kept outside git, behind a stand-in
+([Elements](https://astra-spec.org/0.1/specification/#elements)), is compared by the hash the stand-in
+gives. astra-tools recognises Git LFS pointers, git-annex links and DVC files, and fetches none
+of them. Other packages, a runner say, can add their own stand-ins through the entry-point group
+`astra.standins`.
+
+## `astra history`
+
+```
+astra history timeline ADDR [PATH]
+astra history lineage ADDR [PATH] [--used-by]
+astra history get ADDR@REV [PATH]
+astra history find (--hash H | --environment IRI) [PATH]
+```
+
+Reads a result's records over time, from git. ADDR is a result's address, as its record gives it
+(`fit#ols`, `comparison`), which `astra check` lists. A record's versions are its file at each
+commit along HEAD's history that changed it. Exits 1 where the analysis breaks a `MUST` or what
+is asked for isn't in git, and 2 where ADDR names no planned result or REV names no commit.
+
+| Command | What it shows |
+|---|---|
+| `timeline ADDR` | Each version of the result's record, newest first: the commit that changed it, and the hash, size, commit, end and environment it gives |
+| `lineage ADDR` | What the result was made from, as its record at HEAD gives it, down to the input files. With `--used-by`, the planned results whose records list it instead |
+| `get ADDR@REV` | The bytes the result had at the commit REV names (a commit, a branch, a tag), checked against its record there, written to standard output |
+| `find` | The versions of planned results' records whose bytes have the hash H (`sha256:<hex>`), or whose environment is IRI. It takes one of the two options, not both |
+
+```console
+$ astra history timeline 'fit#ols'
+fit#ols  .astra/records/ols/fit.json
+  76e0a67ba81d46d58fb14ab6a24c4b5b285c6f42
+    bytes        sha256:83a2d44052552a981f0bb7d48cfb46827494634183a606dcbf6a1ad6eaedac4f, 84 byte(s)
+    made at      a1889b94c7b1625919f63acf9dd95347b10b45c9
+    environment  urn:astra-examples:cpython-3.14
+  40f49da033b761882429561e49160d3bb143ee92
+    bytes        sha256:d266a39423ab53320599471891c4500987b46580e9e6546291e829d7d643e33f, 84 byte(s)
+    made at      f0766da472d7b359f747994823af57a8491a32e0
+    environment  urn:astra-examples:cpython-3.14
+2 version(s)
+$ astra history get 'fit#ols@HEAD'
+{
+  "method": "ols",
+  "points": 60,
+  "slope": 1.954668,
+  "intercept": 1.766548
+}
+```
 
 ## `astra spec`
 
-Render the ASTRA schema as agent-friendly reference text, derived from the installed schema.
-
-```bash
-astra spec              # concept vocabulary: every class with a one-line summary
-astra spec decision     # one entry in full (case-insensitive)
-astra spec --full       # the entire reference (very long)
+```
+astra spec [TERM] [--full]
 ```
 
----
-
-## `astra guide`
-
-Print the agent briefing for the ASTRA format — the same [llms.txt](https://astra-spec.org/llms.txt) served by this site. The copy ships inside the installed `astra-spec` package (0.0.13 or later), so it always matches the schema the validator enforces.
-
-```bash
-astra guide                 # print the briefing
-astra guide > context.md    # hand it to an agent as context
-```
-
----
+Describes the fields of ASTRA files, from the specification's schema. Without TERM, it lists the
+classes and enums of the analysis and insight schemas, each with its first sentence. With TERM,
+in any case, it shows that class or enum in full: its description and each of its fields.
+`--full` prints the list and then every entry in full (long). A TERM that names nothing exits 1,
+with the valid terms.
 
 ## `astra schema`
 
-Operate on the underlying LinkML schema files (sourced from `astra-spec`).
-
-### `astra schema export`
-
-Copy the LinkML schema YAMLs into a directory of your choice.
-
-```bash
-astra schema export                    # default: ./schemas/
-astra schema export -o vendor/astra/   # custom path
+```
+astra schema show {analysis|insights|provenance|types}
+astra schema export [-o DIRECTORY]
 ```
 
-### `astra schema show`
+The LinkML schemas of ASTRA files, as astra-spec ships them. `show` prints one: `analysis` for
+`astra.yaml`, `insights` for insights and evidence, `provenance` for a record, and `types` for
+the types they share. `export` writes them all into DIRECTORY, `schemas/` by default.
 
-Print one of the schema files to stdout.
+## `astra guide`
 
-```bash
-astra schema show analysis     # main analysis schema
-astra schema show universe     # universe schema
-astra schema show insights     # insight + evidence schema
+```
+astra guide
 ```
 
----
+Prints astra-spec's guide for agents, `llms.txt`, as it is.
 
 ## `astra paper`
 
-Manage a local cache of papers used as evidence sources, and verify that quoted text exists in the cached PDFs.
-
-The cache lives under `~/.cache/astra/papers/` (XDG-compliant) and is keyed by DOI (and version, for arXiv). Operations are content-addressed: each cached paper records a SHA-256 of the PDF.
-
-### `astra paper add`
-
-Add a paper to the cache.
-
-```bash
-astra paper add 10.48550/arXiv.1706.03762 --version 7
-astra paper add 10.1038/s41586-023-06221-2
-astra paper add 10.1234/example --pdf ./local_paper.pdf
 ```
-
-`--pdf` registers a local file in the cache without downloading. Without it, the CLI downloads the paper from the DOI: arXiv DOIs (prefix `10.48550/arXiv.`) are fetched directly from `arxiv.org`, with `--version` selecting a specific revision; other DOIs are resolved through [Unpaywall](https://unpaywall.org/) for an open-access PDF and will fail if no open copy is available. Title and authors are fetched separately via DOI content-negotiation against `doi.org`.
-
-### `astra paper list`
-
-List all cached papers.
-
-```bash
+astra paper add DOI [-v N] [--pdf FILE]
 astra paper list
+astra paper show DOI [-v N]
+astra paper path DOI [-v N]
+astra paper remove DOI [-v N]
+astra paper fetch-metadata [DOI] [-v N] [--all]
+astra paper verify-quotes DOI [-v N]
+astra paper verify-quote DOI -q QUOTE [-v N] [-p PAGE] [--json]
 ```
 
-### `astra paper show`
+Keeps papers in the cache, by DOI and version (`-v`, `--version`), and verifies quotes in them.
+[`astra validate --verify-evidence`](#astra-validate) verifies the quotes an analysis's evidence
+takes from the works it cites ([Elements](https://astra-spec.org/0.1/specification/#elements));
+`verify-quotes` and `verify-quote` verify quotes you give, with no analysis. A quote is matched
+against the paper's extracted text approximately, so that differences of spacing, ligatures and
+the like don't matter.
 
-Show metadata of a single cached paper.
-
-```bash
-astra paper show 10.48550/arXiv.1706.03762 --version 7
-```
-
-### `astra paper path`
-
-Print the absolute path of a cached PDF — handy for piping into other tools or agents.
-
-```bash
-astra paper path 10.48550/arXiv.1706.03762 -v 7
-xdg-open "$(astra paper path 10.48550/arXiv.1706.03762 -v 7)"
-```
-
-### `astra paper remove`
-
-Remove a paper from the cache.
-
-```bash
-astra paper remove 10.48550/arXiv.1706.03762 -v 7
-```
-
-### `astra paper fetch-metadata`
-
-Fetch title and authors via DOI content negotiation. Useful when papers were added with `--pdf` and have no upstream metadata yet.
-
-```bash
-astra paper fetch-metadata 10.48550/arXiv.1706.03762
-astra paper fetch-metadata --all      # back-fill metadata for all cached papers
-```
-
-### `astra paper verify-quote`
-
-Check that a single quoted text appears in a cached paper. Uses fuzzy matching to tolerate minor extraction differences.
-
-```bash
-astra paper verify-quote 10.48550/arXiv.1706.03762 \
-  -q "FlexZBoost achieves a normalized median absolute deviation of 0.018"
-astra paper verify-quote DOI -q "..." --page 8
-astra paper verify-quote DOI -q "..." --json     # machine-readable output
-```
-
-Exit codes: `0` (verified), `1` (not found), `2` (paper not cached or extraction error).
-
-### `astra paper verify-quotes`
-
-Bulk variant of `verify-quote`. Reads a JSON list of quotes from `stdin`, extracts PDF text once, and writes a JSON report to `stdout`.
-
-```bash
-echo '{"quotes":[{"text":"...","page":8},{"text":"..."}]}' \
-  | astra paper verify-quotes 10.48550/arXiv.1706.03762
-```
-
-Designed to be driven by agents and CI scripts.
+| Command | What it does |
+|---|---|
+| `add DOI` | Keeps the paper of DOI. An arXiv DOI (`10.48550/arXiv.<id>`) is fetched from arXiv, at `--version` where given. No other paper is downloaded: `--pdf` keeps a PDF you have. A paper already in the cache is left as it is. Exits 1 where the paper can't be got or isn't a PDF |
+| `list` | Lists every paper in the cache: its DOI, version, title and when it was kept |
+| `show DOI` | Shows a cached paper: its title and authors (from doi.org, for a paper fetched), SHA-256, when and where from it was kept, and its file. Exits 1 where it isn't in the cache |
+| `path DOI` | Prints the path of a cached paper's PDF, for a tool or an agent that reads it. Exits 1 where it isn't in the cache |
+| `remove DOI` | Removes a paper from the cache. Exits 1 where it isn't there |
+| `fetch-metadata` | Gets the title and authors of a cached paper from doi.org, or of every cached paper that lacks them with `--all` |
+| `verify-quotes DOI` | Verifies quotes given as JSON on stdin, `{"quotes": [{"text": "…", "page": N, "prefix": "…", "suffix": "…"}]}`, in the paper of DOI, and prints `{"doi", "version", "results", "summary"}`: each quote `verified`, with the page it is found on, `not_found` or `error`. A `page` says where to look first, and the quote is found on any page. Exits 0 when every quote is verified, 1 when one isn't, and 2 where the paper isn't in the cache or the input isn't JSON |
+| `verify-quote DOI -q QUOTE` | Verifies one quote, with `--page` to say where to look first, and `--json` for the result as JSON. Exits 0 when it is verified, 1 when it isn't, and 2 where the paper isn't in the cache |
