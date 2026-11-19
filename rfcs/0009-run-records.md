@@ -17,6 +17,10 @@ Drafting notes for the author (delete before opening the pull request):
   them: rebase the branch on origin/main before adding this file.
 - 0009 is the next free number on origin/main. Add a row to rfcs/README.md.
 - Statements marked "(unverified)" were not checked against their source.
+- 2026-11-19: the six unresolved questions answered (time names mapped,
+  `commit` optional with `universe`, `usage_by_model`, records kept outside
+  the repository with `generated_by.run_content_hash`, `cost.price_list`,
+  actor `same_as`); see *Resolved in drafting*.
 -->
 
 ## Context
@@ -92,7 +96,8 @@ not measured. The export also targets ASTRA 0.0.12 (`narrative`, `Analysis.id`,
 The gap is narrow. RFC 0005 already records a run of a recipe as a PROV
 activity with a runner, an environment and two timestamps. This RFC adds the
 record for a run of anything else, using the same types and, where indicium
-already names a field with the same meaning, the same name.
+already names a field with the same meaning, the same name (except the two
+times, which keep the names RFC 0005 gave them and are mapped).
 
 Prior art considered below: W3C PROV-O (which ASTRA records already map to),
 the RO-Crate Workflow Run profiles, and the OpenTelemetry semantic conventions
@@ -141,22 +146,35 @@ conformance example under *Examples*.
 
 ### 1. Where run records go
 
-A run belongs to the analysis whose decisions it was configured with. In that
-analysis's folder its record MUST be at `.astra/runs/{id}.json`, where `{id}`
-is the run's `id`. `.astra/` is already reserved by RFC 0005 (`RESERVED_PATH`),
-so no input can collide with it.
+A run belongs to the analysis whose decisions it was configured with. Its
+record may be committed in that analysis's repository or kept elsewhere, such
+as in a tool's database or a hub; the format and every rule apply wherever it
+is kept. A record committed in the analysis's folder MUST be at
+`.astra/runs/{id}.json`, where `{id}` is the run's `id`. `.astra/` is already
+reserved by RFC 0005 (`RESERVED_PATH`), so no input can collide with it. A
+record kept elsewhere is still identified by its `id`.
 
-Run records are tracked in git like provenance records. Nothing requires a run
-record: no rule says a run must have one, and a checker never reports a result
-`missing` for lack of one.
+Committed run records are tracked in git like provenance records. Nothing
+requires a run record, nor committing one: no rule says a run must have one,
+and a checker never reports a result `missing` for lack of one.
+
+A run record that another record cites, a provenance record through
+`generated_by.run` or an indicium source (section 4), MUST be reachable by
+whoever reads the citing record: committed beside it, or kept where that
+reader can fetch it. It SHOULD be cited with the SHA-256 of its bytes, so that
+a reader holding a copy from anywhere can check it is the record cited.
+`part_of` carries no hash: a larger run's record is often written after its
+parts'.
 
 A run that is part of a larger run (a stage of a build, one call inside a
 session) has its own record and names the larger one in `part_of`. Records
 stay flat; a tree of runs is read from `part_of`.
 
 A provenance record MAY name the run that made its result in a new optional
-field, `generated_by.run`, holding the run's `id`. Nothing else in RFC 0005
-changes.
+field, `generated_by.run`, holding the run's `id`, and SHOULD then give the
+SHA-256 of the run record's bytes in a second optional field beside it,
+`generated_by.run_content_hash`. These two fields are the one change to RFC
+0005's record; nothing else in RFC 0005 changes.
 
 ### 2. What a run record holds
 
@@ -170,12 +188,12 @@ when they are missing. Everything else is optional.
 | Field | Meaning |
 |---|---|
 | `spec_version` | *required* - the version of the ASTRA specification the record follows |
-| `id` | *required* - the run's id, unique in its analysis; the stem of its file name |
+| `id` | *required* - the run's id, unique in its analysis; the stem of its file name when the record is committed |
 | `part_of` | the `id` of the run this run is part of, in the same analysis |
-| `commit` | the full id of the commit the run's code and `astra.yaml` were checked out at, with no change to tracked files; left out for a run from a working tree with changes |
+| `commit` | the full id of the commit the run's code and `astra.yaml` were checked out at, with no change to tracked files; left out when the run came from a working tree with changes or was imported, and then `universe` and `decisions` are read at the commit that adds the record |
 | `universe` | the id of the universe of the analysis the run was configured with |
 | `decisions` | options the run selected, as `<decision>: <option>`, written over the universe's effective selection decision by decision (as a universe's own `decisions` are over the one it is `derived_from`), or on their own when there is no `universe` |
-| `actors` | *required* - who took part, keyed by actor id, each with a `kind`: `human`, `agent`, `tool` or `unknown`, and optionally a `label` and a `version` |
+| `actors` | *required* - who took part, keyed by actor id, each with a `kind`: `human`, `agent`, `tool` or `unknown`, and optionally a `label`, a `version` and a `same_as` IRI naming the same actor across analyses |
 | `executor` | *required* - the actor id of who ran it |
 | `on_behalf_of` | the actor id of who the executor acted for |
 | `started`, `finished` | *recommended* - when the run started and finished, in UTC to the millisecond, ending in `Z` |
@@ -185,7 +203,8 @@ when they are missing. Everything else is optional.
 | `models` | the models called, as the provider names them |
 | `model_calls` | how many model calls were made, failed ones included |
 | `tokens` | `input` and `output`, both required when `tokens` is given, and optionally `reasoning`, `cache_read`, `cache_write` |
-| `cost` | `amount`, `currency` (ISO 4217) and `basis`: `measured` (billed or reported for this run) or `estimated` (computed from counts and a price list) |
+| `cost` | `amount`, `currency` (ISO 4217) and `basis`: `measured` (billed or reported for this run) or `estimated` (computed from counts and a price list), and optionally `price_list`, a reference to the price list an estimate used |
+| `usage_by_model` | the run's usage broken down by model: entries each with a `model`, and optionally `model_calls`, `tokens` and `cost` for that model alone |
 | `code`, `configuration`, `environment`, `inputs`, `outputs` | references, each a `ref` with an optional `content_hash` and `size` |
 | `data_origin` | whether what the run worked on is `real`, `synthetic` or `mixed` |
 | `event_log` | a reference to a log of the run's events (tool calls, model calls) kept outside the record |
@@ -210,6 +229,30 @@ in ASTRA, never of a stand-in, never of metadata about them.
 writer MUST NOT write `0` for a count or an amount it did not observe
 (`UNKNOWN_AS_ZERO`). A call routed through a subscription has no per-call
 price: its `cost` is left out, not `0`.
+
+**Without `commit`.** A run record without `commit` records a run that came
+from a working tree with changes to tracked files, or one imported from
+another store. It may still set `universe` and `decisions`; they are then read
+at the commit that adds the record to the repository. A record that has no
+`commit` and is kept outside the repository has no such commit, so it sets
+neither.
+
+**Usage by model.** A run that called several models may break its usage down
+in `usage_by_model`: one entry per model, each with its `model` (one of
+`models`) and, for that model alone, `model_calls`, `tokens` and `cost` of the
+same shape and rules as the run's. An entry leaves out what was not observed
+for it (`UNKNOWN_AS_ZERO`). Where an entry and the run both give a quantity
+and every entry gives it, the entries sum to the run's (`USAGE_SUM_MISMATCH`);
+costs are summed only when they share one `currency` and one `basis`. The
+run's `cost` is the cost of the whole run, so when one entry's cost is unknown
+the run's is left out too. The breakdown is for usage only. Work that is a run
+of its own, with its own times, outcome, executor, inputs or outputs, such as
+a stage of a build, gets its own record with `part_of`.
+
+**Price lists.** An `estimated` cost SHOULD name the price list it was
+computed from in `price_list`, a reference with a `content_hash` when the list
+is a file, so that two estimates can be compared (`MISSING_PRICE_LIST`, a
+warning; the record stays valid).
 
 #### Schema
 
@@ -295,9 +338,10 @@ classes:
     tree_root: true
     class_uri: prov:Activity
     description: >-
-      One run done for an analysis, which its executor writes as JSON at
-      `.astra/runs/{id}.json` in the analysis's folder. Read as RDF, its
-      top-level node stands for the run.
+      One run done for an analysis, which its executor writes as JSON: at
+      `.astra/runs/{id}.json` in the analysis's folder when it is committed,
+      or wherever else it is kept. Read as RDF, its top-level node stands for
+      the run.
     attributes:
       spec_version:
         range: spec_version
@@ -309,8 +353,9 @@ classes:
         range: id
         required: true
         description: >-
-          The run's id, unique among the runs of its analysis: the stem of
-          the record's file name, such as `run_5d2a9c71e04b8f36`.
+          The run's id, unique among the runs of its analysis, such as
+          `run_5d2a9c71e04b8f36`: the stem of the record's file name when it
+          is committed, and what names it wherever else it is kept.
       part_of:
         range: id
         slot_uri: prov:wasInformedBy
@@ -322,12 +367,14 @@ classes:
         description: >-
           The full id of the git commit the run's code and `astra.yaml` were
           checked out at, with no change to tracked files. A run from a
-          working tree with such changes leaves it out.
+          working tree with such changes, or one imported from another
+          store, leaves it out.
       universe:
         range: id
         description: >-
           The id of the universe of the analysis the run was configured
-          with: an entry of its `universes`, never an import.
+          with: an entry of its `universes`, never an import, at the record's
+          `commit`, or at the commit that adds the record when it has none.
       decisions:
         range: DecisionSelection
         multivalued: true
@@ -401,7 +448,17 @@ classes:
       cost:
         range: Cost
         inlined: true
-        description: What the run cost.
+        description: >-
+          What the whole run cost. Left out when the cost of any part of it
+          is unknown.
+      usage_by_model:
+        range: ModelUsage
+        multivalued: true
+        inlined_as_list: true
+        minimum_cardinality: 1
+        description: >-
+          The run's usage broken down by model, one entry per model of
+          `models`.
       code:
         range: Reference
         multivalued: true
@@ -484,6 +541,36 @@ classes:
       version:
         slot_uri: schema:softwareVersion
         description: For software, its version, such as `1.4.2`.
+      same_as:
+        range: iri
+        slot_uri: schema:sameAs
+        description: >-
+          An absolute IRI naming the same actor outside this record, so that
+          it can be recognised across analyses, such as an ORCID IRI for a
+          person or a URL for a release of a tool.
+
+  ModelUsage:
+    description: >-
+      The part of a run's usage that went to one model. Each field has the
+      shape and the rules of the run's field of the same name, and is left
+      out when it was not observed for this model.
+    attributes:
+      model:
+        required: true
+        description: >-
+          The model, as its provider names it: one of the run's `models`.
+      model_calls:
+        range: integer
+        minimum_value: 0
+        description: How many calls the run made to this model, failed ones included.
+      tokens:
+        range: Tokens
+        inlined: true
+        description: The tokens this model's calls used.
+      cost:
+        range: Cost
+        inlined: true
+        description: What this model's calls cost.
 
   Tokens:
     description: >-
@@ -530,6 +617,13 @@ classes:
         range: CostBasis
         required: true
         description: Whether the amount was measured or estimated.
+      price_list:
+        range: Reference
+        inlined: true
+        description: >-
+          The price list an `estimated` amount was computed from, such as a
+          provider's published prices on a date, with the hash of its bytes
+          when it is a file.
 
   Reference:
     class_uri: prov:Entity
@@ -581,16 +675,27 @@ Additions to `src/astra/schema/types.yaml`:
       rule: INVALID_VALUE
 ```
 
-Addition to `Generation` in `src/astra/schema/provenance.yaml`:
+Additions to `Generation` in `src/astra/schema/provenance.yaml`:
 
 ```yaml
       run:
         range: id
         slot_uri: prov:wasInformedBy
         description: >-
-          The id of the run, recorded at `.astra/runs/{id}.json` in the
-          analysis the result belongs to, during which the recipe ran.
+          The id of the run during which the recipe ran, a run of the
+          analysis the result belongs to, whose record is at
+          `.astra/runs/{id}.json` in that analysis's folder or wherever else
+          the reader can reach it.
+      run_content_hash:
+        range: content_hash
+        description: >-
+          The SHA-256 digest of the bytes of the run record `run` names.
+          Given only with `run`.
 ```
+
+`run_content_hash` is the one addition this RFC proposes to RFC 0005's record
+beyond `run` itself: a sibling field rather than a change to `run`'s range, so
+that `run` stays an id and a record without the hash stays valid.
 
 ### 3. Rules
 
@@ -602,26 +707,30 @@ the others extend an existing code to run records.
 | **parse** | | |
 | `INVALID_SYNTAX` | MUST | A run record is UTF-8 JSON text, no object repeating a name |
 | **schema** | | |
-| `MISSING_FIELD` | MUST | A run record has `spec_version`, `id`, `actors`, `executor`, `execution`; an actor, `kind`; `tokens`, `input` and `output`; `cost`, `amount`, `currency`, `basis`; a reference, `ref` |
-| `MISSING_FIELD` | SHOULD | A run record has `started` and `finished` |
+| `MISSING_FIELD` | MUST | A run record has `spec_version`, `id`, `actors`, `executor`, `execution`; an actor, `kind`; `tokens`, `input` and `output`; `cost`, `amount`, `currency`, `basis`; an entry of `usage_by_model`, `model`; a reference, `ref`; a `generated_by` with `run_content_hash`, `run` |
+| `MISSING_FIELD` | SHOULD | A run record has `started` and `finished`; a `generated_by` with `run` has `run_content_hash` |
 | `WRONG_TYPE` | MUST | (as today) no value is `null`; an unknown is left out |
-| `INVALID_VALUE` | MUST | `execution`, `kind`, `data_origin`, `basis` are among their values; `currency` is three uppercase letters; `stop_reason` matches `^[a-z0-9][a-z0-9_.+-]*$`; counts, `size` and `amount` are ≥ 0 |
+| `INVALID_VALUE` | MUST | `execution`, `kind`, `data_origin`, `basis` are among their values; `currency` is three uppercase letters; `stop_reason` matches `^[a-z0-9][a-z0-9_.+-]*$`; an actor's `same_as` is an absolute IRI; `run_content_hash` is a content hash; counts, `size` and `amount` are ≥ 0 |
 | `INVALID_ID` | MUST | `id`, `part_of` and `universe` are ids; actor keys, `executor` and `on_behalf_of` are actor ids |
 | `INVALID_PATH` | MUST | A reference's `ref` is non-empty and doesn't start with `/` |
 | **`EXIT_CODE_MISMATCH`** | MUST | A run `executed` with an `exit_code` has `0` |
 | **check** (a broken rule makes the run record `invalid`) | | |
-| **`MISPLACED_RUN`** | MUST | A run record's `id` is the stem of its file name under `.astra/runs/` |
+| **`MISPLACED_RUN`** | MUST | A run record committed in an analysis's folder is at `.astra/runs/{id}.json`, its `id` the stem of its file name; a record kept elsewhere is found by its `id` |
 | **`EXIT_CODE_MISMATCH`** | MUST | A run `failed` with an `exit_code` has one other than `0` |
 | **`UNKNOWN_ACTOR`** | MUST | `executor` and `on_behalf_of` are keys of `actors` |
 | **`INVALID_INTERVAL`** | MUST | `finished` is not before `started` |
-| **`INVALID_TOKEN_COUNTS`** | MUST | `cache_read + cache_write <= input` and `reasoning <= output` |
+| **`INVALID_TOKEN_COUNTS`** | MUST | `cache_read + cache_write <= input` and `reasoning <= output`, in `tokens` and in each entry's `tokens` |
+| **`UNKNOWN_MODEL`** | MUST | Each `model` of `usage_by_model` is one of `models`, and no two entries have the same `model` |
+| **`USAGE_SUM_MISMATCH`** | MUST | Where the run gives `model_calls`, a count of `tokens` or `cost.amount`, and every entry of `usage_by_model` gives it too, the entries' values sum to the run's; costs only when every entry's `currency` and `basis` are the run's |
 | **`UNKNOWN_PARENT_RUN`** | MUST | `part_of` names a run record of the same analysis, and no chain of `part_of` loops |
-| **`UNKNOWN_RUN_UNIVERSE`** | MUST | `universe` names a universe, not an import, of the analysis at the record's `commit`, or at the commit that adds the record when it has none |
-| `UNRESOLVED_ADDRESS`, `UNKNOWN_OPTION` | MUST | Each key of `decisions` names a decision, and each value one of its options, read the same way |
-| **`MISSING_RUN`** | SHOULD | A provenance record's `generated_by.run` names a run record of its analysis (a warning; the result's status doesn't change) |
+| **`UNKNOWN_RUN_UNIVERSE`** | MUST | `universe` names a universe, not an import, of the analysis at the record's `commit`; a record without `commit` (from a working tree with changes, or imported) is read at the commit that adds it, and one with neither sets no `universe` |
+| `UNRESOLVED_ADDRESS`, `UNKNOWN_OPTION` | MUST | Each key of `decisions` names a decision, and each value one of its options, read at the same commit as `universe`, also when there is no `universe`; a record with neither commit sets no `decisions` |
+| **`MISSING_PRICE_LIST`** | SHOULD | A `cost` with `basis: estimated` has a `price_list` (a warning; the record stays valid) |
+| **`MISSING_RUN`** | MUST | The run record a provenance record's `generated_by.run` names is reachable by the reader: at `.astra/runs/{id}.json` in its analysis, or where the reader is told run records are kept (reported against the provenance record; the result's status doesn't change) |
+| **`RUN_HASH_MISMATCH`** | MUST | A `generated_by.run_content_hash` is the SHA-256 of the bytes of the run record `run` names (reported against the provenance record) |
 | **writer** (whatever writes a run record: a runner, a harness, an exporter) | | |
 | `FALSE_RECORD` | MUST | Every field of a run record its writer writes is true of the run |
-| **`UNKNOWN_AS_ZERO`** | MUST | A writer leaves out a count, size or amount it did not observe, never writing `0` for it |
+| **`UNKNOWN_AS_ZERO`** | MUST | A writer leaves out a count, size or amount it did not observe, never writing `0` for it, in the run's fields and in each entry of `usage_by_model` |
 | **`CONTENT_IN_RUN_RECORD`** | SHOULD | No field holds a prompt, a model or tool payload, or text written by a person; `label` and `stop_reason` are short and generic |
 
 A run record never becomes `stale`: it is the history of something that
@@ -644,16 +753,20 @@ copies the other:
   run's `id`. The reverse doesn't hold: an indicium id is not always an ASTRA
   id.
 - **The run record as a source.** The activity cites the run record as an
-  indicium source of kind `artifact`, with `path: .astra/runs/<id>.json` and
-  the SHA-256 of the record's bytes. Its `execution_receipt` is computed from
+  indicium source of kind `artifact`, with the SHA-256 of the record's bytes
+  and where to reach it: `path: .astra/runs/<id>.json` when the record is
+  committed, else the place it is kept (a tool's database, a hub), which the
+  reader must be able to reach (section 1). Its `execution_receipt` is computed from
   the run record field by field (table below), so the record is the
   authority and the receipt a projection of it.
 - **Shared names.** Where a field means the same thing, it has the same name:
   `executor`, `code`, `configuration`, `environment`, `inputs`, `outputs`,
   `exit_code`, `model_calls`, `tokens.input`, `tokens.output`, `cost.amount`,
   `cost.currency`, `cost.basis` and its values, `execution` and its values,
-  `data_origin` and its values, actor `kind` and its values. The differences
-  are listed under *Examples*.
+  `data_origin` and its values, actor `kind` and its values. The two times
+  keep their own names on each side, `started` and `finished` here,
+  `started_at` and `finished_at` in indicium, and are mapped; neither is
+  renamed. The differences are listed under *Examples*.
 
 ASTRA never points at an indicium record. A review verdict, a selection, a
 mandate and an observation stay out of ASTRA, because each is a judgement by
@@ -685,15 +798,20 @@ isn't the SHA-256 of the bytes would break every check that relies on it.
 
 Actor ids, labels and timestamps can identify people and their working hours.
 Writers SHOULD use pseudonymous actor ids for people when records are shared
-beyond the people concerned.
+beyond the people concerned. An actor's `same_as` identifies a person outright
+(an ORCID IRI does), whatever the actor id: writers leave it out of records
+shared beyond the people concerned unless that person agreed.
 
 ## Examples
 
 ### Conformance example
 
 `tests/data/valid/RunRecord-001-agent-run.json`: a coding agent's run for a
-member, under the universe `baseline` with one decision changed. Records are
-JSON (`INVALID_SYNTAX`), and a JSON text is also a YAML 1.2 document.
+member, under the universe `baseline` with one decision changed. It called two
+models, the second through a subscription whose price is unknown, so that
+model's entry in `usage_by_model` has no `cost`, and neither has the run.
+Records are JSON (`INVALID_SYNTAX`), and a JSON text is also a YAML 1.2
+document.
 
 ```json
 {
@@ -705,7 +823,7 @@ JSON (`INVALID_SYNTAX`), and a JSON text is also a YAML 1.2 document.
   "actors": {
     "member_a": {"kind": "human"},
     "agent:coder": {"kind": "agent", "label": "Coding agent"},
-    "tool:harness": {"kind": "tool", "version": "1.4.2"}
+    "tool:harness": {"kind": "tool", "version": "1.4.2", "same_as": "https://example.org/harness/releases/1.4.2"}
   },
   "executor": "agent:coder",
   "on_behalf_of": "member_a",
@@ -714,7 +832,7 @@ JSON (`INVALID_SYNTAX`), and a JSON text is also a YAML 1.2 document.
   "execution": "executed",
   "exit_code": 0,
   "stop_reason": "completed",
-  "models": ["example-provider/model-x"],
+  "models": ["example-provider/model-x", "example-provider/model-y"],
   "model_calls": 57,
   "tokens": {
     "input": 1204511,
@@ -723,7 +841,24 @@ JSON (`INVALID_SYNTAX`), and a JSON text is also a YAML 1.2 document.
     "cache_read": 1011200,
     "cache_write": 64002
   },
-  "cost": {"amount": 4.82, "currency": "EUR", "basis": "estimated"},
+  "usage_by_model": [
+    {
+      "model": "example-provider/model-x",
+      "model_calls": 51,
+      "tokens": {"input": 1120400, "output": 35020, "reasoning": 9311, "cache_read": 1011200, "cache_write": 64002},
+      "cost": {
+        "amount": 4.82,
+        "currency": "EUR",
+        "basis": "estimated",
+        "price_list": {"ref": "prices/example-provider-2026-11-01.json", "content_hash": "sha256:0b9e5c2f1d7a4e3b8c6f9a2d5e1b7c4f8a3d6e9b2c5f8a1d4e7b0c3f6a9d2e5b"}
+      }
+    },
+    {
+      "model": "example-provider/model-y",
+      "model_calls": 6,
+      "tokens": {"input": 84111, "output": 3100, "reasoning": 0, "cache_read": 0, "cache_write": 0}
+    }
+  ],
   "code": [
     {"ref": "tool:harness@1.4.2", "content_hash": "sha256:e5da4a1cdb3c241cc8b3f2a9d7ba70a679960729bd9d8700791d412b34feef97"}
   ],
@@ -759,6 +894,9 @@ Invalid fixtures, each wrong for one reason:
 - `RunRecord-206-actor-kind-robot.json` (`INVALID_VALUE`)
 - `RunRecord-207-absolute-ref.json`, `"ref": "/home/a/data.csv"` (`INVALID_PATH`)
 - `RunRecord-208-time-with-offset.json`, `"started": "2026-11-25T14:00:00+01:00"` (`INVALID_VALUE`)
+- `RunRecord-209-usage-model-not-in-models.json` (`UNKNOWN_MODEL`)
+- `RunRecord-210-usage-calls-do-not-sum.json`, entries of 51 and 5 calls for `"model_calls": 57` (`USAGE_SUM_MISMATCH`)
+- `RunRecord-211-same-as-not-an-iri.json`, `"same_as": "0000-0002-1825-0097"` (`INVALID_VALUE`)
 
 ### Mapping: ASB's tags to run records
 
@@ -779,14 +917,14 @@ model and per analytical flag in the `astra.yaml`, selected by the record's
 | `asb:llm_errors` (root, stage) | none | stays a tag; failed calls are counted in `model_calls` |
 | `asb:error_rate` (root) | none | derived; stays a tag |
 | `asb:tokens_in`, `asb:tokens_out` | `tokens.input`, `tokens.output` | left out when the manifest has none, never `0` (`UNKNOWN_AS_ZERO`) |
-| `asb:cost_usd` | `cost: {amount, currency: USD, basis}` | ASB sets `basis` from where its cost comes from (unverified: provider-reported or computed); left out for calls through a subscription harness, which ASB records as `0.0` today |
+| `asb:cost_usd` | `cost: {amount, currency: USD, basis}` | ASB sets `basis` from where its cost comes from (unverified: provider-reported or computed); left out for calls through a subscription harness, which ASB records as `0.0` today; an estimate names its price list in `price_list` |
 | `asb:package_version` | `actors["tool:asb"].version` | ASB is the `tool` actor |
 | `asb:git_sha`, `asb:git_dirty` | `commit` | only a full commit id, and only when `git_dirty` is false; else left out, and the tags stay |
 | `asb:deps_hash` | `environment[]` | `ref: urn:asb:deps:<hash>`; a `content_hash` only if the hash is the SHA-256 of a lock file's bytes (unverified) |
 | `asb:prompt_version` (model decision) | `configuration[]` | `ref: prompts/<agent>@<version>`, with a `content_hash` of the prompt file if ASB has it |
 | `asb:seed`, `asb:temperature` (model decision) | decisions, as today | configuration, not run facts |
 | stage `input_sha256`, `output_path` | `inputs[]`, `outputs[]` | `content_hash: sha256:<hex>` if it is the SHA-256 of the bytes (unverified) |
-| per-agent model (decision `model_<agent>`) | `decisions` and `models` | the decision stays; `models` lists what was called |
+| per-agent model (decision `model_<agent>`) | `decisions` and `models` | the decision stays; `models` lists what was called, and `usage_by_model` may break a stage's usage down by model |
 | `asb:cards_emitted`, `asb:figure_parser`, `asb:parser_degraded` | none | build outputs and health, not run facts; stay tags |
 | `asb:build_journey` and the `build_journey` sub-analysis | none | the journey is ASB's own record; `trace/build_trace.yaml` may be named in `outputs` |
 
@@ -804,7 +942,7 @@ The run records' readers today are ASB's renderer and run viewer
 | `code`, `configuration`, `environment` | same names | indicium requires each non-empty; ASTRA makes them optional, so a run record without them yields no receipt |
 | `inputs`, `outputs` | same names | indicium requires them to equal the activity's `lineage`; ASTRA has no lineage |
 | reference `{source_id, digest}` | `{ref, content_hash, size}` | indicium's `digest` is bare hex of the canonical JSON of the source's metadata (which holds the bytes' `sha256`); ASTRA's `content_hash` is `sha256:` and the hex of the bytes |
-| `started_at`, `finished_at` | `started`, `finished` | name: ASTRA keeps the names RFC 0005 gave `Generation`; form: indicium takes any ISO 8601 time with an offset, ASTRA only UTC with milliseconds and `Z` |
+| `started_at`, `finished_at` | `started`, `finished` | name: each side keeps its own and neither is renamed, `started_at` ↔ `started` and `finished_at` ↔ `finished` (ASTRA's are the names RFC 0005 gave `Generation`); form: indicium takes any ISO 8601 time with an offset, ASTRA only UTC with milliseconds and `Z` |
 | `exit_code` (required integer) | `exit_code` (optional) | ASTRA leaves it out where there was no process; indicium needs one |
 | `model_calls` (integer or `null`) | `model_calls` (left out when unknown) | `null` ↔ absent |
 | `tokens: {input, output}` exactly, or `null` | `tokens` with `input`, `output` and optional `reasoning`, `cache_read`, `cache_write` | the extra keys are dropped for indicium; totals are kept because `input` includes cached tokens |
@@ -813,7 +951,7 @@ The run records' readers today are ASB's renderer and run viewer
 | activity `trace.execution` `executed`/`failed`/`partial` | `execution` | indicium also has `planned` and `not_applicable`, which a run record never needs |
 | activity `trace.data_origin` incl. `unknown` | `data_origin`, left out when unknown | `unknown` ↔ absent |
 | activity record `id` | `id` | an ASTRA run id is a valid indicium id |
-| none | `part_of`, `on_behalf_of`, `commit`, `universe`, `decisions`, `models`, `stop_reason`, `event_log`, actor `label`, `version` | ASTRA only; an exporter can name the run record as a source to carry them |
+| none | `part_of`, `on_behalf_of`, `commit`, `universe`, `decisions`, `models`, `usage_by_model`, `stop_reason`, `event_log`, `cost.price_list`, actor `label`, `version`, `same_as` | ASTRA only; an exporter can name the run record as a source to carry them |
 | `mandate`, `selection`, `review`, `trace.method`/`scope`/`coverage` | none | indicium only, by design (section 4) |
 
 Same exit-code rule on both sides: `executed` needs `0`, `failed` needs a
@@ -867,8 +1005,8 @@ Judge call (one per call, failed and timed-out calls included):
 ## Implementation implications & migration
 
 *Compatibility:* additive. Nothing changes in `astra.yaml`. A new record
-schema sits beside the others, and `Generation` gains one optional field,
-`run`. A 0.1 checker reads a provenance record of a newer minor version
+schema sits beside the others, and `Generation` gains two optional fields,
+`run` and `run_content_hash`. A 0.1 checker reads a provenance record of a newer minor version
 through its open schema (`INVALID_RECORD`), so `generated_by.run` breaks no
 check, and it never looks in `.astra/runs/`.
 
@@ -881,7 +1019,8 @@ removes nothing that 0.1.0rc1 has.
 *`astra-spec`:*
 
 - `src/astra/schema/run.yaml` (new), `types.yaml` (`actor_id`,
-  `currency_code`), `provenance.yaml` (`Generation.run`).
+  `currency_code`), `provenance.yaml` (`Generation.run`,
+  `Generation.run_content_hash`).
 - Generated: `run.schema.json`, `run.open.schema.json`, `run.context.jsonld`;
   `rules.json` gains the new codes.
 - `docs/specification.md`: a *Runs* paragraph beside *record*, the rule rows of
@@ -890,8 +1029,10 @@ removes nothing that 0.1.0rc1 has.
 - Tests: `RunRecord` fixtures under `tests/data/` and `"RunRecord": "run"` in
   `_SCHEMA_NAMES` of `tests/conftest.py`.
 
-*`astra-tools`:* the checker reads `.astra/runs/` and applies the check rows;
-the runner MAY write a run record per invocation and set `generated_by.run`.
+*`astra-tools`:* the checker reads `.astra/runs/`, and run records kept
+elsewhere when it is told where, and applies the check rows; the runner MAY
+write a run record per invocation and set `generated_by.run` and
+`generated_by.run_content_hash`.
 
 *Writers:*
 
@@ -959,35 +1100,53 @@ and none is required.
 - ASTRA "stays out of execution". A run record doesn't run anything, as a
   provenance record doesn't, but it does bring execution facts (cost, tokens,
   models) into the spec, and with them requests for more such fields.
-- One more schema, four classes and about a dozen rules to maintain.
-- Until indicium renames or maps them, two names (`started`/`finished` and
-  `started_at`/`finished_at`) mean the same thing in two formats used
-  together.
-- Costs invite comparisons across providers and price lists that `basis`
-  alone doesn't make fair.
+- One more schema, five classes and about fifteen rules to maintain.
+- Two names (`started`/`finished` and `started_at`/`finished_at`) mean the
+  same thing in two formats used together; the mapping states the
+  correspondence, and an exporter has to apply it.
+- Costs invite comparisons across providers and price lists that `basis` and
+  `price_list` alone don't make fair.
 - Unsalted hashes can confirm guessable content (section 5).
-- A busy tool can make many run records; kept in git, they add up.
+- A busy tool can make many run records. It may keep them outside git, but
+  then every record a result cites has to stay reachable wherever it is kept,
+  and that store has to be kept alongside the repository.
+
+### Resolved in drafting
+
+1. **Time field names: both kept, and mapped.** Run records use `started` and
+   `finished`, the names RFC 0005 already released in `Generation`; indicium
+   keeps `started_at` and `finished_at`. Nothing is renamed in either format,
+   and the indicium mapping table states the correspondence.
+2. **`commit` stays optional, and a record without it may set `universe` and
+   `decisions`.** They are then read at the commit that adds the record
+   (`UNKNOWN_RUN_UNIVERSE`, `UNKNOWN_OPTION`). The absence of `commit` says
+   that the run came from a working tree with changes or was imported, which
+   is worth recording rather than refusing.
+3. **Per-model usage: an optional `usage_by_model`.** Several models used
+   within one run are a breakdown of that run's usage, not separate runs, so
+   a record lists them in entries summing to its totals (`UNKNOWN_MODEL`,
+   `USAGE_SUM_MISMATCH`). A child run with `part_of` remains the way to record
+   work that is a run of its own.
+4. **Run records may be kept outside the analysis's repository.** The format
+   and the rules apply wherever a record is kept, and a committed record stays
+   at `.astra/runs/{id}.json`. A record that another record cites must be
+   reachable by its reader (`MISSING_RUN`) and should be cited with the
+   SHA-256 of its bytes, which a provenance record carries in the one field
+   this adds to RFC 0005's record, `generated_by.run_content_hash`
+   (`RUN_HASH_MISMATCH`).
+5. **An `estimated` cost should name its price list** in `cost.price_list`, so
+   that two estimates can be compared. Without it the record stays valid, with
+   a warning (`MISSING_PRICE_LIST`).
+6. **Actor ids stay local; an actor may carry `same_as`.** The id grammar is
+   unchanged, so ids stay short and match indicium's. An optional absolute
+   IRI, such as an ORCID IRI or a tool release's URL, links the same actor
+   across analyses; since it identifies a person, writers leave it out of
+   records shared beyond the people concerned unless that person agreed
+   (section 5).
 
 ### Unresolved questions
 
-1. **Time field names.** Should indicium rename `started_at`/`finished_at` to
-   `started`/`finished` (it is unreleased; ASTRA's names are released in
-   `Generation`), or should both be accepted?
-2. **`commit`.** Optional here, so that runs from a working tree with changes
-   and exported runs can be recorded. Should a run record without a `commit`
-   be allowed to set `universe` and `decisions`, which are then read at the
-   commit that adds the record?
-3. **Per-model usage.** One record carries summed tokens and cost and a list
-   of models. Is a child run per model (`part_of`) enough, or should a record
-   break usage down by model?
-4. **Where many records go.** Should run records always be committed, or may
-   a tool keep them elsewhere and commit only those that results or evidence
-   name? This meets RFC 0005's future store by content hash.
-5. **Estimated costs.** Should an `estimated` cost name its price list, for
-   example as a `configuration` reference, so two estimates can be compared?
-6. **Actor ids.** The proposed grammar admits `kind:name` forms such as
-   `agent:judge` to match indicium's ids. Should actor ids instead be IRIs, so
-   that one actor can be recognised across analyses?
+None remain from the first draft; the six it raised are answered above.
 
 Signing run records (in-toto, SLSA) stays with RFC 0005's future *Signed
 records*. `on_behalf_of` records who a run was for, not an authorisation;
